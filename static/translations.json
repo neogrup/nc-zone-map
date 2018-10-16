@@ -1,0 +1,11 @@
+{
+  "en":{
+  },
+  "es": {
+    "BUTTON_CLOSE": "Cerrar",
+    "ELEMENT_SELECT_DOC_DIALOG_TITLE": "Selecciona el documento",
+    "ELEMENT_SELECT_DOC_DIALOG_SUBTITLE": "Puesto seleccionado: "
+  },
+  "ca":{
+  }
+}

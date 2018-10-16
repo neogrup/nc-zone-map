@@ -1,0 +1,102 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../neon-animation/web-animations.html">
+<link rel="import" href="../neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html">
+
+<dom-module id="nc-zone-element-select-doc">
+  <template>
+    <style>
+      .header {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+      }
+      iron-icon {
+        margin-right: 12px;
+      }
+      .actions-list{
+        @apply --layout-vertical;
+      }
+      .action-content {
+        @apply --layout-horizontal;
+        margin: 5px 0;
+      }
+      .action-message{
+        @apply --layout-flex;
+      }
+      .action-actions{
+        width: 140px;
+        text-align: right;
+      }
+      .action-actions paper-button{
+        width: 120px;
+      }
+    </style>
+
+    <paper-dialog id="selectDocDialog" _modal entry-animation="scale-up-animation">
+      <div class="header">
+        <iron-icon icon="content-copy"></iron-icon><h3>{{localize('ELEMENT_SELECT_DOC_DIALOG_TITLE')}}</h3>
+      </div>
+      <div class="content">
+        <p>{{localize('ELEMENT_SELECT_DOC_DIALOG_SUBTITLE')}} <b>[[elementConf.id]]</b></p>
+        
+      </div>
+      <paper-dialog-scrollable>
+        <div class="actions-list">
+          <template is="dom-repeat" items="{{elementData.docs}}" as="doc">
+            <div on-tap="handleDocSelected" style="border: 1px solid">
+              <div>{{doc.id}}</div>
+              <div>{{doc.totalAmount}}</div>
+              <div>{{doc.edited}}</div>
+            </div>
+          </template>
+        </div>
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button raised dialog-dismiss>{{localize('BUTTON_CLOSE')}}</paper-button>
+      </div>
+    </paper-dialog>
+
+  </template>
+
+  <script>
+    class NcZoneElementSelectDoc extends Polymer.mixinBehaviors([Polymer.AppLocalizeBehavior], Polymer.Element) {
+      static get is() {
+        return 'nc-zone-element-select-doc'; 
+      }
+
+      static get properties() {
+        return {
+          language: String,
+          elementConf: Object,
+          elementData: Object
+        }
+      }
+
+      connectedCallback(){
+        super.connectedCallback();
+        this.useKeyIfMissing = true;
+        
+        this.loadResources(this.resolveUrl('static/translations.json'));
+      }
+
+      open(){
+        /* Fix Modal paper-dialog appears behind its backdrop */
+        // var app = document.querySelector('body').firstElementChild.shadowRoot;
+        // Polymer.dom(app).appendChild(this.$.selectDocDialog);
+        this.$.selectDocDialog.open();
+        // console.log(this.elementData)
+      }
+
+      handleDocSelected(e){
+        this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf, ticketId: e.model.doc.id}, bubbles: true, composed: true }));
+        this.$.selectDocDialog.close();
+      }
+
+    }
+
+    window.customElements.define(NcZoneElementSelectDoc.is, NcZoneElementSelectDoc);
+  </script>
+</dom-module>

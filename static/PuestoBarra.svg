@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   width="3.4544001mm"
+   height="3.9793332mm"
+   id="svg3336"
+   inkscape:version="0.91 r13725"
+   viewBox="0 0 3.4544001 3.9793332"
+   sodipodi:docname="PuestoBarra.svg">
+  <metadata
+     id="metadata3345">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview3343"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="60.283691"
+     inkscape:cx="6.1200001"
+     inkscape:cy="7.0499997"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3336" />
+  <defs
+     id="defs3338">
+    <pattern
+       id="EMFhbasepattern"
+       patternUnits="userSpaceOnUse"
+       width="6"
+       height="6"
+       x="0"
+       y="0" />
+  </defs>
+  <path
+     style="fill:#80a1c8;fill-opacity:1;fill-rule:evenodd;stroke:#497096;stroke-width:0.35277778px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="m 1.5875,0.17638889 c 0.9701389,0 1.7638889,0.88194441 1.7638889,1.85208331 0,0.9701389 -0.79375,1.8520834 -1.7638889,1.8520834 -1.5875,0 -1.23472222,-0.79375 -1.23472222,-1.8520834 0,-0.9701389 -0.44097222,-1.85208331 1.23472222,-1.85208331 z"
+     id="path3341"
+     inkscape:connector-curvature="0" />
+</svg>
