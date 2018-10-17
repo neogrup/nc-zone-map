@@ -55,7 +55,7 @@
       }
     </style>
 
-    <div class="image" _on-track="handleTrack" on-tap="handleElementSelected">
+    <div class="image" _on-track="handleTrack" on-tap="elementSelected">
       <div class="element">
         {{elementConf.id}}
         <div class="data" hidden$="{{_hideDiv('DELIVEREDPRODUCTS', spotsViewMode)}}">
@@ -100,7 +100,11 @@
             value: ''
           },
           elementOffSetTop: Number,
-          elementOffSetLeft: Number
+          elementOffSetLeft: Number,
+          multipleTicketsAllowed: {
+            type: Boolean,
+            value: true
+          }
         }
       }
 
@@ -162,7 +166,6 @@
         this.updateStyles({
           '--url-image': 'url(' + this.elementConf.urlImage.substring(1,this.elementConf.urlImage.lastIndexOf('.svg')) + '_o.svg' +')'
         });
-        
       }
 
       clearElement(){
@@ -177,15 +180,17 @@
         });
       }
 
-      handleElementSelected(e){
+      elementSelected(e){
         if(this.mode == 'edit') return;
 
         if ((!this.elementData.docsCount) || (this.elementData.docsCount === 0)){
           this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf}, bubbles: true, composed: true }));
-        } else if (this.elementData.docsCount === 1){
-          this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf, ticketId: this.elementData.docId}, bubbles: true, composed: true }));
         } else{
-          this.dispatchEvent(new CustomEvent('openDocSelection', {detail: {elementConf: this.elementConf, elementData: this.elementData}, bubbles: true, composed: true }));
+          if(this.multipleTicketsAllowed){
+            this.dispatchEvent(new CustomEvent('element-open-select-doc', {detail: {elementConf: this.elementConf, elementData: this.elementData}, bubbles: true, composed: true }));
+          } else {
+            this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf, ticketId: this.elementData.docId}, bubbles: true, composed: true }));
+          }
         }
       }
 

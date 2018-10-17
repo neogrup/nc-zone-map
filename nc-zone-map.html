@@ -4,7 +4,7 @@
 <link rel="import" href="../paper-card/paper-card.html">
 
 <link rel="import" href="nc-zone-element.html">
-<link rel="import" href="nc-zone-element-select-doc.html">
+<link rel="import" href="nc-zone-element-select-doc-dialog.html">
 
 <dom-module id="nc-zone-map">
   <template>
@@ -34,14 +34,16 @@
             element-conf="{{element}}"
             mode="{{mode}}"
             spots-view-mode="{{spotsViewMode}}"
-            on-element-selected="_handleElementSelected">
+            multiple-tickets-allowed="{{multipleTicketsAllowed}}"
+            on-element-open-select-doc="_openSelectDoc"
+            on-element-selected="_elementSelected">
           </nc-zone-element>
         </template>
       </div>
     </div>
 
-    <nc-zone-element-select-doc
-          id="selectDocDialog" language="{{language}}" on-element-selected="_handleElementSelected"></nc-zone-element-select-doc>
+    <nc-zone-element-select-doc-dialog
+          id="selectDocDialog" language="{{language}}" on-element-selected="_elementSelected"></nc-zone-element-select-doc-dialog>
     
   </template>
 
@@ -76,15 +78,15 @@
             type: Array,
             value: []
           },
+          multipleTicketsAllowed: Boolean
         }
       }
 
       connectedCallback(){
         super.connectedCallback();
-        this.addEventListener('openDocSelection', this._openDocSelection);
       }
 
-      _openDocSelection(e){
+      _openSelectDoc(e){
         this.$.selectDocDialog.set('elementData', e.detail.elementData);
         this.$.selectDocDialog.set('elementConf', e.detail.elementConf);
         this.$.selectDocDialog.open();
@@ -102,8 +104,6 @@
           '--zone-height': this.data.height + 'px'
         });
       }
-
-      
 
       _ticketsListChanged(){
         let iZones;
@@ -136,7 +136,7 @@
         this.shadowRoot.querySelector(slot).clearElement();
       }
 
-      _handleElementSelected(e){
+      _elementSelected(e){
         let spot = e.detail.elementConf;
         let ticketId = e.detail.ticketId;
 
