@@ -3,6 +3,7 @@
   },
   "es": {
     "BUTTON_CLOSE": "Cerrar",
+    "BUTTON_NEW": "Nuevo",
     "ELEMENT_SELECT_DOC_DIALOG_TITLE": "Selecciona el documento",
     "ELEMENT_SELECT_DOC_DIALOG_SUBTITLE": "Puesto seleccionado: "
   },
