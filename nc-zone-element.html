@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="../polymer/lib/utils/async.html">
 
 <dom-module id="nc-zone-element">
   <template>
@@ -55,7 +56,7 @@
       }
     </style>
 
-    <div class="image" _on-track="handleTrack" on-tap="elementSelected">
+    <div class="image" _on-track="handleTrack" on-mousedown="_mouseDown" on-mouseup="_mouseUp" on-touchstart="_touchStart" on-touchend="_touchEnd">
       <div class="element">
         {{elementConf.id}}
         <div class="data" hidden$="{{_hideDiv('DELIVEREDPRODUCTS', spotsViewMode)}}">
@@ -151,7 +152,9 @@
         let docId = '';
 
         for (iDocs in element.docs){
-          deliveredProducts = deliveredProducts + element.docs[iDocs].stats.deliveredProducts;
+          if (element.docs[iDocs].stats){
+            deliveredProducts = deliveredProducts + element.docs[iDocs].stats.deliveredProducts;
+          }
           totalAmount = totalAmount + element.docs[iDocs].totalAmount;
           docId = (docId === '') ? element.docs[iDocs].id : '+' + (Number(iDocs) + 1).toString();
         }
@@ -179,17 +182,64 @@
           '--url-image': 'url(' + this.elementConf.urlImage + ')'
         });
       }
+      
+      _mouseDown(e){
+        // Only desktop
+        if ((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)) return;
 
-      elementSelected(e){
+        this._debouncer = Polymer.Debouncer.debounce(
+          this._debouncer,
+          Polymer.Async.timeOut.after(1000),
+          () => {
+            this._elementSelected('pressed');
+          }
+        );
+      }
+
+      _mouseUp(e){
+        // Only desktop
+        if ((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)) return;
+
+        if (this._debouncer){
+          if (this._debouncer._timer) {
+            this._debouncer.cancel();
+            this._elementSelected('clicked');
+          }
+        }
+      }
+
+      _touchStart(e){
+        this._debouncer = Polymer.Debouncer.debounce(
+          this._debouncer,
+          Polymer.Async.timeOut.after(1000),
+          () => {
+            this._elementSelected('pressed');
+          }
+        );
+      }
+
+      _touchEnd(e){
+        if (this._debouncer._timer) {
+          this._debouncer.cancel();
+          this._elementSelected('clicked');
+        }
+      }
+
+      _elementSelected(selectMode){
         if(this.mode == 'edit') return;
 
+        
         if ((!this.elementData.docsCount) || (this.elementData.docsCount === 0)){
           this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf}, bubbles: true, composed: true }));
         } else{
-          if(this.multipleTicketsAllowed){
+          if (this.elementData.docsCount === 1) {
+            if ((this.multipleTicketsAllowed) && (selectMode === 'pressed')){  
+              this.dispatchEvent(new CustomEvent('element-open-select-doc', {detail: {elementConf: this.elementConf, elementData: this.elementData}, bubbles: true, composed: true }));
+            } else {
+              this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf, ticketId: this.elementData.docId}, bubbles: true, composed: true }));
+            }
+          } else{
             this.dispatchEvent(new CustomEvent('element-open-select-doc', {detail: {elementConf: this.elementConf, elementData: this.elementData}, bubbles: true, composed: true }));
-          } else {
-            this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf, ticketId: this.elementData.docId}, bubbles: true, composed: true }));
           }
         }
       }

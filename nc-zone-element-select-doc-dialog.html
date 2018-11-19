@@ -11,61 +11,9 @@
 <dom-module id="nc-zone-element-select-doc-dialog">
   <template>
     <style>
-      .header {
-        @apply --layout-horizontal;
-        @apply --layout-center;
-      }
-      iron-icon {
-        margin-right: 12px;
-      }
-      .actions-list{
-        @apply --layout-vertical;
-      }
-      .action-content {
-        @apply --layout-horizontal;
-        margin: 5px 0;
-      }
-      .action-message{
-        @apply --layout-flex;
-      }
-      .action-actions{
-        width: 140px;
-        text-align: right;
-      }
-      .action-actions paper-button{
-        width: 120px;
-      }
-
-
-      .doc:first-child{
-        /* border-top: none; */
-      }
-
-      .doc {
-        cursor: pointer;
-        @apply --layout-horizontal;
-        @apply --layout-justified;
-        padding: 5px;
-        margin-bottom: 5px;
-        border: 1px solid var(--app-secondary-color);
-        border-radius: 3px;
-        /* border-top: 1px solid #E0E0E0; */
-        background-color: #E3F2FD;
-      }
-
-      paper-button{
-        margin: 10px 5px;
-        background-color: var(--app-secondary-color);
-        color: white;
-      }
-
-      .bolder {
-        font-weight: bolder;
-      }
-
     </style>
 
-    <paper-dialog id="selectDocDialog" _modal entry-animation="scale-up-animation">
+    <paper-dialog id="selectDocDialog" class="modalNoApp" modal entry-animation="scale-up-animation">
       <div class="header">
         <iron-icon icon="content-copy"></iron-icon><h3>{{localize('ELEMENT_SELECT_DOC_DIALOG_TITLE')}}</h3>
       </div>
@@ -114,18 +62,22 @@
 
       open(){
         /* Fix Modal paper-dialog appears behind its backdrop */
-        // var app = document.querySelector('body').firstElementChild.shadowRoot;
-        // Polymer.dom(app).appendChild(this.$.selectDocDialog);
+        var app = document.querySelector('body').firstElementChild.shadowRoot;
+        Polymer.dom(app).appendChild(this.$.selectDocDialog);
         this.$.selectDocDialog.open();
-        // console.log(this.elementData)
       }
 
       _newDoc(e){
         this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf}, bubbles: true, composed: true }));
+        this.elementConf = {};
+        this.elementData = {};
+        this.$.selectDocDialog.close();
       }
 
       _docSelected(e){
         this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf, ticketId: e.model.doc.id}, bubbles: true, composed: true }));
+        this.elementConf = {};
+        this.elementData = {};
         this.$.selectDocDialog.close();
       }
 

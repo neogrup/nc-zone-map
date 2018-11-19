@@ -87,6 +87,8 @@
       }
 
       _openSelectDoc(e){
+        this.$.selectDocDialog.set('elementData', {});
+        this.$.selectDocDialog.set('elementConf', {});
         this.$.selectDocDialog.set('elementData', e.detail.elementData);
         this.$.selectDocDialog.set('elementConf', e.detail.elementConf);
         this.$.selectDocDialog.open();
