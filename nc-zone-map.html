@@ -61,6 +61,10 @@
             value: {},
             observer: '_dataChanged'
           },
+          ticketLoading: {
+            type: Boolean,
+            notify: true
+          },
           ticketsList: {
             type: Object,
             value: {},
@@ -139,11 +143,13 @@
       }
 
       _elementSelected(e){
-        let spot = e.detail.elementConf;
-        let ticketId = e.detail.ticketId;
-
-        if (spot.customers != 0 ){
-          this.dispatchEvent(new CustomEvent('zone-element-selected', {detail: {spot: spot, ticketId: ticketId}, bubbles: true, composed: true }));
+        if (!this.ticketLoading){
+          let spot = e.detail.elementConf;
+          let ticketId = e.detail.ticketId;
+          if (spot.customers != 0 ){
+            this.ticketLoading = true;
+            this.dispatchEvent(new CustomEvent('zone-element-selected', {detail: {spot: spot, ticketId: ticketId}, bubbles: true, composed: true }));
+          }
         }
         
       }
