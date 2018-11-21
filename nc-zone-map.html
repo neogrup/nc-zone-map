@@ -116,7 +116,9 @@
         let iElements;
         let slot;
         
+        if (!this.ticketsList) return;
         if (Object.keys(this.ticketsList).length === 0) return;
+
         if (this.ticketsList.data.zones.length > 0) {
           for (iElements in this.data.elements){            
             slot = '#slot' + this.data.id + this.data.elements[iElements].id; 
@@ -135,11 +137,15 @@
       }
 
       updateSpot(slot, element){
-        this.shadowRoot.querySelector(slot).updateElement(element);
+        if (this.shadowRoot.querySelector(slot)){
+          this.shadowRoot.querySelector(slot).updateElement(element);
+        }
       }
 
       clearElement(slot){
-        this.shadowRoot.querySelector(slot).clearElement();
+        if (this.shadowRoot.querySelector(slot)){
+          this.shadowRoot.querySelector(slot).clearElement();
+        }
       }
 
       _elementSelected(e){
