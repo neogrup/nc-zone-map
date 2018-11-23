@@ -56,7 +56,7 @@
       }
     </style>
 
-    <div class="image" _on-track="handleTrack" on-mousedown="_mouseDown" on-mouseup="_mouseUp" on-touchstart="_touchStart" on-touchend="_touchEnd">
+    <div class="image" _on-track="handleTrack" on-mousedown="_mouseDown" on-mouseup="_mouseUp" on-mouseout='_mouseOut' on-touchstart="_touchStart" on-touchend="_touchEnd">
       <div class="element">
         {{elementConf.id}}
         <div class="data" hidden$="{{_hideDiv('DELIVEREDPRODUCTS', spotsViewMode)}}">
@@ -184,6 +184,7 @@
       }
       
       _mouseDown(e){
+        // console.log('_mouseDown');
         // Only desktop
         if ((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)) return;
 
@@ -197,6 +198,7 @@
       }
 
       _mouseUp(e){
+        // console.log('_mouseUp');
         // Only desktop
         if ((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)) return;
 
@@ -208,7 +210,16 @@
         }
       }
 
+      _mouseOut(e){
+        if (this._debouncer){
+          if (this._debouncer._timer) {
+            this._debouncer.cancel();
+          }
+        }
+      }
+
       _touchStart(e){
+        // console.log('_touchStart');
         this._debouncer = Polymer.Debouncer.debounce(
           this._debouncer,
           Polymer.Async.timeOut.after(1000),
@@ -219,6 +230,7 @@
       }
 
       _touchEnd(e){
+        // console.log('_touchEnd');
         if (this._debouncer._timer) {
           this._debouncer.cancel();
           this._elementSelected('clicked');
