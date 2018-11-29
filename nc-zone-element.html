@@ -159,6 +159,8 @@
           docId = (docId === '') ? element.docs[iDocs].id : '+' + (Number(iDocs) + 1).toString();
         }
 
+        deliveredProducts = !isNaN(deliveredProducts) ? deliveredProducts : 0;
+
         this.set('elementData.deliveredProducts', deliveredProducts);
         this.set('elementData.totalAmount', totalAmount.toFixed(2));
         this.set('elementData.docId', docId);
