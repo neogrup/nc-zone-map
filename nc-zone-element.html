@@ -95,6 +95,7 @@
             //reflectToAttribute: true,
             //notify: true
           },
+          editorMode: Boolean,
           mode: String,
           spotsViewMode: {
             type: String,
@@ -242,18 +243,22 @@
       _elementSelected(selectMode){
         if(this.mode == 'edit') return;
 
-        
-        if ((!this.elementData.docsCount) || (this.elementData.docsCount === 0)){
-          this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf}, bubbles: true, composed: true }));
+        if (this.editorMode){
+          /* TODO: Maybe manage editorModeType, p.e. moveTicket, etc. */
+          this.dispatchEvent(new CustomEvent('element-selected-to-move-end', {detail: {elementConf: this.elementConf}, bubbles: true, composed: true }));
         } else{
-          if (this.elementData.docsCount === 1) {
-            if ((this.multipleTicketsAllowed) && (selectMode === 'pressed')){  
-              this.dispatchEvent(new CustomEvent('element-open-select-doc', {detail: {elementConf: this.elementConf, elementData: this.elementData}, bubbles: true, composed: true }));
-            } else {
-              this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf, ticketId: this.elementData.docId}, bubbles: true, composed: true }));
-            }
+          if ((!this.elementData.docsCount) || (this.elementData.docsCount === 0)){
+            this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf}, bubbles: true, composed: true }));
           } else{
-            this.dispatchEvent(new CustomEvent('element-open-select-doc', {detail: {elementConf: this.elementConf, elementData: this.elementData}, bubbles: true, composed: true }));
+            if (this.elementData.docsCount === 1) {
+              if ((this.multipleTicketsAllowed) && (selectMode === 'pressed')){  
+                this.dispatchEvent(new CustomEvent('element-open-select-doc', {detail: {elementConf: this.elementConf, elementData: this.elementData}, bubbles: true, composed: true }));
+              } else {
+                this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf, ticketId: this.elementData.docId}, bubbles: true, composed: true }));
+              }
+            } else{
+              this.dispatchEvent(new CustomEvent('element-open-select-doc', {detail: {elementConf: this.elementConf, elementData: this.elementData}, bubbles: true, composed: true }));
+            }
           }
         }
       }

@@ -32,18 +32,24 @@
             language={{language}}
             id="slot{{data.id}}{{element.id}}"
             element-conf="{{element}}"
+            editor-mode="{{editorMode}}"
             mode="{{mode}}"
             spots-view-mode="{{spotsViewMode}}"
             multiple-tickets-allowed="{{multipleTicketsAllowed}}"
             on-element-open-select-doc="_openSelectDoc"
-            on-element-selected="_elementSelected">
+            on-element-selected="_elementSelected"
+            on-element-selected-to-move-end="_elementSelectedToMoveEnd">
           </nc-zone-element>
         </template>
       </div>
     </div>
 
     <nc-zone-element-select-doc-dialog
-          id="selectDocDialog" language="{{language}}" on-element-selected="_elementSelected"></nc-zone-element-select-doc-dialog>
+        id="selectDocDialog" 
+        language="{{language}}" 
+        on-element-selected="_elementSelected"
+        on-element-selected-to-move="_elementSelectedToMove">
+    </nc-zone-element-select-doc-dialog>
     
   </template>
 
@@ -70,6 +76,7 @@
             value: {},
             observer: '_ticketsListChanged'
           },
+          editorMode: Boolean,
           mode: {
             type: String,
             value: 'edit'
@@ -157,8 +164,22 @@
             this.dispatchEvent(new CustomEvent('zone-element-selected', {detail: {spot: spot, ticketId: ticketId}, bubbles: true, composed: true }));
           }
         }
-        
       }
+
+      _elementSelectedToMove(e){
+        if (!this.ticketLoading){
+          let spot = e.detail.elementConf;
+          let ticketId = e.detail.ticketId;
+          this.dispatchEvent(new CustomEvent('zone-element-selected-to-move', {detail: {spot: spot, ticketId: ticketId}, bubbles: true, composed: true }));
+        }
+      }
+
+      _elementSelectedToMoveEnd(e){
+        let spot = e.detail.elementConf;
+        this.dispatchEvent(new CustomEvent('zone-element-selected-to-move-end', {detail: {spot: spot}, bubbles: true, composed: true }));
+      }
+
+      
     }
 
     window.customElements.define(NcZoneMap.is, NcZoneMap);
