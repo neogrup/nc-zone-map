@@ -106,10 +106,16 @@
       }
 
       _dataChanged() {
+        let iElements;
+        let slot;
         this.set('elements', []);
         if (Object.keys(this.data).length === 0) return;
         if (this.data.elements.length > 0) {
           this.set('elements', this.data.elements);
+          for (iElements in this.data.elements){            
+            slot = '#slot' + this.data.id + this.data.elements[iElements].id; 
+            this.clearElement(slot);
+          }
         }
         
         this.updateStyles({
@@ -122,7 +128,7 @@
         let iZones;
         let iElements;
         let slot;
-        
+
         if (!this.ticketsList) return;
         if (Object.keys(this.ticketsList).length === 0) return;
 
