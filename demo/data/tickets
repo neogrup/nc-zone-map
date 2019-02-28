@@ -1,0 +1,72 @@
+{
+  "apiVersion": "1",
+  "systemTime": "2019-02-28T10:24:24.147303+01:00",
+  "data": {
+    "zones": [
+      {
+        "elements": [
+          {
+            "docs": [
+              {
+                "attendedBy": "47275733S",
+                "attendedByName": "EPL",
+                "created": "2019-02-28T10:23:59",
+                "customer": {
+                  "totalClients": 0
+                },
+                "edited": "2019-02-28T10:24:01",
+                "id": "145004",
+                "stats": {
+                  "deliveredProducts": 3,
+                  "printInvoiceCount": 0,
+                  "printProformaCount": 0
+                },
+                "totalAmount": 7.97
+              },
+              {
+                "attendedBy": "47275733S",
+                "attendedByName": "EPL",
+                "created": "2019-02-28T10:24:06",
+                "customer": {
+                  "totalClients": 0
+                },
+                "edited": "2019-02-28T10:24:12",
+                "id": "145005",
+                "stats": {
+                  "deliveredProducts": 3,
+                  "printInvoiceCount": 0,
+                  "printProformaCount": 0
+                },
+                "totalAmount": 4.5
+              }
+            ],
+            "id": "01"
+          },
+          {
+            "docs": [
+              {
+                "attendedBy": "",
+                "attendedByName": "",
+                "created": "2019-02-28T10:23:36",
+                "customer": {
+                  "totalClients": 0
+                },
+                "edited": "2019-02-28T10:23:53",
+                "id": "145002",
+                "stats": {
+                  "deliveredProducts": 4,
+                  "printInvoiceCount": 0,
+                  "printProformaCount": 0
+                },
+                "totalAmount": 7.2
+              }
+            ],
+            "id": "03"
+          }
+        ],
+        "id": "R002BAR"
+      }
+    ]
+  },
+  "error": null
+}
