@@ -1,5 +1,9 @@
 {
   "en":{
+    "BUTTON_CLOSE": "Close",
+    "BUTTON_NEW": "New",
+    "ELEMENT_SELECT_DOC_DIALOG_TITLE": "Select document",
+    "ELEMENT_SELECT_DOC_DIALOG_SUBTITLE": "Selected spot: "
   },
   "es": {
     "BUTTON_CLOSE": "Cerrar",
@@ -8,5 +12,9 @@
     "ELEMENT_SELECT_DOC_DIALOG_SUBTITLE": "Puesto seleccionado: "
   },
   "ca":{
+    "BUTTON_CLOSE": "Tancar",
+    "BUTTON_NEW": "Nou",
+    "ELEMENT_SELECT_DOC_DIALOG_TITLE": "Selecciona el documento",
+    "ELEMENT_SELECT_DOC_DIALOG_SUBTITLE": "Lloc seleccionat: "
   }
 }

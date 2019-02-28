@@ -5,14 +5,13 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.0"
    width="8.2126665mm"
    height="34.671001mm"
    id="svg3336"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.1 r15371"
    viewBox="0 0 8.2126665 34.671001"
    sodipodi:docname="BarraLuna.svg">
   <metadata
@@ -36,16 +35,16 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="640"
-     inkscape:window-height="480"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
      id="namedview3348"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="6.9190066"
-     inkscape:cx="14.55"
-     inkscape:cy="61.425003"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:zoom="4.8924765"
+     inkscape:cx="21.85593"
+     inkscape:cy="56.378238"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg3336" />
   <defs
@@ -72,13 +71,10 @@
      d=""
      id="path3344"
      inkscape:connector-curvature="0" />
-  <image
-     y="-34.983543"
-     x="-0.088022277"
-     xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAACECAIAAAB+lb5bAAACCUlEQVRoge2a3XWDMAyFZdpJOkQzQ5fIKOEwSpgmZCn6AHXBNrb+oBG1nnI4B32+1yYGyXC7P8Y9owGAth/afoB9ovG/2n5o+6c6wN3uj/hqd71oAZrkVUXH0gBFRpNxQ4WxqcAzhJgCwGP2BQA4NgMJGIGrAwmYg8FoQPWxSgNIQRVBBlAZHAApmAC8CL4CJGMG8BYShnHoHDjG/UURCgryjCVglMPygCA4jpEAhMi49AuIVqqOYxgFDmPXloh3BEAkRfNBS4rgAQgLjAcgmCa0KJQSuyQEjEnMJoC7+3uMg0gEZpmSMBAI2mM/WC2BV93087GcBpsKTgHw0xAC1N+0zVp0CsA0z5YVVEAFqETbD8YVVAAToLupndKiCqiAClDtr6QBumEc0F0vxhVUQAX8e8D0fmVZgXGAf8ENAeoHLMxaZByw/ISxqcA4IPiGVOwfpPsgK4DsMU53juQWrQYef2NLAFPqQstL0qgLUydLBFQAatQ8ADk1FVCIrRJKEeAXCbPpuzrIl0qNypupAP3BfxHZk3wBKz4Zony64lCLOGMvFvhECjDlwxlwxIFWaiCrn0wAvrb6kps+qTRMBlALzzQAo6w9n7um3kYDIINXlce8eDkA6K6fjOyAVMDOjgJIsgPA2/jxlc0u7YbkFKj0WuJJdj/ZRc5kAKNuk2gCKI86BiiPehnf8NPg87hU+AwAAAAASUVORK5CYII="
-     height="34.924999"
-     width="8.4666662"
-     transform="scale(1,-1)"
-     preserveAspectRatio="none"
-     id="image3346" />
+  <path
+     style="fill:#80a1c8;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1.5569669px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 0.04502328,0.26570254 C 0.03875868,-1.8829402 8.2686347,4.9358951 8.2239577,17.419603 8.1731117,31.627256 -0.03272502,36.609939 0.09910288,34.465335 0.40708868,29.454957 1.5285826,26.673304 1.5285826,17.365524 1.5285826,8.8333879 0.06520558,7.1878956 0.04502328,0.26570254 Z"
+     id="path3341-5"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="sssss" />
 </svg>

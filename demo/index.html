@@ -5,61 +5,116 @@ Copyright (c) 2017 Neo
 -->
 <html lang="es">
 <head>
-  <title>nc-zone-map demo</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <title>nc-zone-map demo</title>
 
-  <link rel="import" href="../../polymer/polymer-element.html">
-  <link rel="import" href="../../iron-ajax/iron-ajax.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
 
-  <link rel="import" href="../nc-zone-map.html">
-  <style>
-    body{
-      background-color: #cdcdcd;
-      margin: 0px;
-      padding: 0px;
-    }
-  </style>
-</head>
-<body unresolved>
-<dom-module id="nc-zone-map-demo">
-  
-  <template>
-    <style>
-     :host {
-        display: block;
-      }
-    </style>
-    <iron-ajax
-            auto
-            id="getZoneMap"
-            url="data/zone"
-            method="get"
-            handle-as="json"
-            last-response="{{dataZoneMap}}">
-    </iron-ajax>
-      
-    <nc-zone-map
-          data="[[dataZoneMap]]"
-          mode="edit">
-    </nc-zone-map>
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/web-animations-js/web-animations-next-lite.min.js"></script>
 
-  </template>
-  <script>
-    class NcZoneMapDemo extends Polymer.Element {
-      static get is() {
-        return 'nc-zone-map-demo';
-      }
-    }
-    window.customElements.define(NcZoneMapDemo.is, NcZoneMapDemo);
-
+  <script type="module">
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+    import '@polymer/iron-demo-helpers/demo-snippet';
   </script>
-</dom-module>
-<nc-zone-map-demo></nc-zone-map-demo>
+
+  <script type="module" src="../nc-zone-map.js"></script>
+
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+      /* div{
+        height: 50%;
+        width: 500px;
+      } */
+    </style>
+  </custom-style>
+  
+</head>
+<body>
+  <div class="vertical-section-container centered">
+    <h3>nc-zone-map demo</h3>
+    <demo-snippet>
+      <template>
+        <demo-nc-zone-map></demo-nc-zone-map>
+      </template>
+    </demo-snippet>
+  </div>
+
+  <script type="module">
+    import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+    import '@polymer/iron-ajax/iron-ajax.js';
+
+    class DemoNcZoneMap extends PolymerElement {
+
+      static get template() {
+        return html`
+          <style>
+          </style>
+
+          <iron-ajax
+              auto
+              id="getZoneMap"
+              url="data/zone"
+              method="get"
+              handle-as="json"
+              last-response="{{dataZoneMap}}">
+          </iron-ajax>
+
+          <iron-ajax id="getZoneTicketsList"
+              auto
+              id="getTickets"
+              method="get"
+              url="data/tickets"
+              handle-as="json"
+              last-response="{{dataZoneTicketsList}}">
+          </iron-ajax>
+            
+          <nc-zone-map
+              language={{language}}
+              data="{{dataZoneMap}}"
+              editor-mode="{{editorMode}}"
+              ticket-loading="{{ticketLoading}}"
+              tickets-list="{{dataZoneTicketsList}}"
+              editor-mode="{{editorMode}}"
+              mode="view"
+              spots-view-mode="{{spotsViewMode}}"
+              multiple-tickets-allowed="{{multipleTicketsAllowed}}"
+              on-zone-element-selected="_zoneElementSelected"
+              on-zone-element-selected-to-move="_zoneElementSelectedToMove"
+              on-zone-element-selected-to-move-end="_zoneElementSelectedToMoveEnd">
+          </nc-zone-map>
+        `;
+      }
+
+      static get properties() {
+        return {
+          language: {
+            type: String,
+            value: 'es'
+          },
+          elementConf: Object,
+          elementData: Object
+        }
+      }
+
+      _zoneElementSelected(element){
+        console.log('_zoneElementSelected', element);
+      }
+
+      _zoneElementSelectedToMove(element){
+        console.log('_zoneElementSelectedToMove', element);
+      }
+
+      _zoneElementSelectedToMoveEnd(element){
+        console.log('_zoneElementSelectedToMoveEnd', element);
+      }
+    }
+    window.customElements.define('demo-nc-zone-map', DemoNcZoneMap);
+  </script> 
+  
 </body>
 </html>
+
+
