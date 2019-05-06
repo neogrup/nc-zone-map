@@ -8,14 +8,19 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
   static get template() {
     return html`
       <style>
-        .container{
+        :host {
+          display: block;
+          height: 100%;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
           overflow: auto;
         }
 
         .zone-map{
           position: relative;
-          width: var(--zone-width);
-          height: var(--zone-height);
+          height: 100%;
+          width: 100%;
         }
 
         .element{
@@ -24,25 +29,24 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
 
       </style>
 
-      <div class="container">
-        <div class="zone-map">
-          <template is="dom-repeat" items="{{elements}}" as="element">
-            <nc-zone-element 
-                id="slot{{data.id}}{{element.id}}"
-                language="{{language}}"  
-                element-conf="{{element}}" 
-                editor-mode="{{editorMode}}" 
-                mode="{{mode}}" 
-                spots-view-mode="{{spotsViewMode}}" 
-                multiple-tickets-allowed="{{multipleTicketsAllowed}}" 
-                on-element-open-select-doc="_openSelectDoc" 
-                on-element-selected="_elementSelected" 
-                on-element-selected-to-move-end="_elementSelectedToMoveEnd">
-            </nc-zone-element>
-          </template>
-        </div>
+      <div class="zone-map">
+        <template is="dom-repeat" items="{{elements}}" as="element">
+          <nc-zone-element 
+              id="slot{{data.id}}{{element.id}}"
+              factor="{{factor}}"
+              language="{{language}}"  
+              element-conf="{{element}}" 
+              editor-mode="{{editorMode}}" 
+              mode="{{mode}}" 
+              spots-view-mode="{{spotsViewMode}}" 
+              multiple-tickets-allowed="{{multipleTicketsAllowed}}" 
+              on-element-open-select-doc="_openSelectDoc" 
+              on-element-selected="_elementSelected" 
+              on-element-selected-to-move-end="_elementSelectedToMoveEnd">
+          </nc-zone-element>
+        </template>
       </div>
-
+      
       <nc-zone-element-select-doc-dialog 
           id="selectDocDialog" 
           language="{{language}}" 
@@ -82,20 +86,30 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
         type: Array,
         value: []
       },
-      multipleTicketsAllowed: Boolean
+      multipleTicketsAllowed: Boolean,
+      zoneHeight: {
+        type: Number,
+        observer: '_zoneHeightChanged'
+      }
+
     }
   }
 
   connectedCallback(){
     super.connectedCallback();
-  }
 
+    
+  }
   _openSelectDoc(e){
     this.$.selectDocDialog.set('elementData', {});
     this.$.selectDocDialog.set('elementConf', {});
     this.$.selectDocDialog.set('elementData', e.detail.elementData);
     this.$.selectDocDialog.set('elementConf', e.detail.elementConf);
     this.$.selectDocDialog.open();
+  }
+
+  _zoneHeightChanged(){
+    this._dataChanged();
   }
 
   _dataChanged() {
@@ -111,10 +125,14 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
       }
     }
     
-    this.updateStyles({
-      '--zone-width': this.data.width + 'px',
-      '--zone-height': this.data.height + 'px'
-    });
+    let factor = 1;
+    if (this.zoneHeight < this.data.height){
+      factor = this.data.height / this.zoneHeight;
+    }
+    
+    this.factor = factor;
+
+
   }
 
   _ticketsListChanged(){

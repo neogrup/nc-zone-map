@@ -34,6 +34,7 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
           width: var(--width);
           height: var(--height);
           cursor: var(--cursor);  
+          z-index: 99;
         }
 
         .element {
@@ -55,7 +56,7 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
         }
       </style>
 
-      <div class="image" _on-track="handleTrack" on-mousedown="_mouseDown" on-mouseup="_mouseUp" on-mouseout="_mouseOut" on-touchstart="_touchStart" on-touchend="_touchEnd">
+      <div class="image" _on-track="handleTrack" on-mousedown="_mouseDown" on-mouseup="_mouseUp" on-mouseout="_mouseOut" on-touchstart="_touchStart" on-touchmove="_touchMove" on-touchend="_touchEnd">
         <div class="element">
           {{elementConf.id}}
           <div class="data" hidden\$="{{_hideDiv('DELIVEREDPRODUCTS', spotsViewMode)}}">
@@ -98,6 +99,11 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
       multipleTicketsAllowed: {
         type: Boolean,
         value: true
+      },
+      factor: {
+        type: Number,
+        value: 1,
+        observer: '_factorChanged'
       }
     }
   }
@@ -105,6 +111,10 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
   connectedCallback(){
     super.connectedCallback();
     this.elementData = {}
+  }
+
+  _factorChanged(){
+    this._elementConfChanged();
   }
 
   _hideDiv(div, spotsViewMode){
@@ -127,11 +137,11 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
 
 
     this.updateStyles({
-      '--width': this.elementConf.width + 'px',
-      '--height': this.elementConf.height + 'px',
+      '--width': this.elementConf.width / this.factor + 'px',
+      '--height': this.elementConf.height / this.factor + 'px',
       '--url-image': 'url(' + this.elementConf.urlImage + ')',
-      '--pos-y': (this.elementConf.posY - (this.elementConf.height / 2) ) + 'px',
-      '--pos-x': (this.elementConf.posX - (this.elementConf.width / 2) ) +  'px',
+      '--pos-y': ((this.elementConf.posY / this.factor) - ((this.elementConf.height / this.factor) / 2) ) + 'px',
+      '--pos-x': ((this.elementConf.posX / this.factor) - ((this.elementConf.width / this.factor) / 2) ) +  'px',
       '--cursor': cursor,
       '--text-visibility': textVisibility
     });
@@ -179,6 +189,7 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
   }
 
   _mouseDown(e){
+    if (e.button !== 0) return;
     // console.log('_mouseDown');
     // Only desktop
     if ((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)) return;
@@ -193,6 +204,7 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
   }
 
   _mouseUp(e){
+    if (e.button !== 0) return;
     // console.log('_mouseUp');
     // Only desktop
     if ((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)) return;
@@ -206,6 +218,7 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
   }
 
   _mouseOut(e){
+    if (e.button !== 0) return;
     if (this._debouncer){
       if (this._debouncer._timer) {
         this._debouncer.cancel();
@@ -214,7 +227,6 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
   }
 
   _touchStart(e){
-    // console.log('_touchStart');
     this._debouncer = Debouncer.debounce(
       this._debouncer,
       timeOut.after(1000),
@@ -224,8 +236,16 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
     );
   }
 
+  _touchMove(e){
+    if (this._debouncer){
+      if (this._debouncer._timer) {
+        this._debouncer.cancel();
+      }
+    }
+  }
+
+
   _touchEnd(e){
-    // console.log('_touchEnd');
     if (this._debouncer._timer) {
       this._debouncer.cancel();
       this._elementSelected('clicked');
