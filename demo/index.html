@@ -15,48 +15,54 @@ Copyright (c) 2017 Neo
   <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
   <script src="../node_modules/web-animations-js/web-animations-next-lite.min.js"></script>
 
-  <script type="module">
-    import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
-    import '@polymer/iron-demo-helpers/demo-snippet';
-  </script>
 
   <script type="module" src="../nc-zone-map.js"></script>
+  <style>
+    body{
+      margin: 0px;
+      padding: 0px;
+    }
+  </style>
 
-  <custom-style>
-    <style is="custom-style" include="demo-pages-shared-styles">
-      /* div{
-        height: 50%;
-        width: 500px;
-      } */
-    </style>
-  </custom-style>
   
 </head>
 <body>
-  <div class="vertical-section-container centered">
-    <h3>nc-zone-map demo</h3>
-    <demo-snippet>
-      <template>
-        <demo-nc-zone-map></demo-nc-zone-map>
-      </template>
-    </demo-snippet>
-  </div>
+    <demo-nc-zone-map></demo-nc-zone-map>
 
   <script type="module">
     import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
     import '@polymer/iron-ajax/iron-ajax.js';
+    import '@polymer/paper-card/paper-card.js';
 
     class DemoNcZoneMap extends PolymerElement {
 
       static get template() {
         return html`
           <style>
+            :host{
+              display: block;
+              
+            }
+            
+            div.content-zone{
+              height: 100vh;
+              width: 100%;
+              padding: 0px;
+              position: relative;
+            }
+
+            paper-card{
+              width: calc(100% - 0px);
+              height: calc(100% - 0px);
+            } 
+            
+
           </style>
 
           <iron-ajax
               auto
               id="getZoneMap"
-              url="data/zone"
+              url="data/zone-2"
               method="get"
               handle-as="json"
               last-response="{{dataZoneMap}}">
@@ -71,20 +77,25 @@ Copyright (c) 2017 Neo
               last-response="{{dataZoneTicketsList}}">
           </iron-ajax>
             
-          <nc-zone-map
-              language={{language}}
-              data="{{dataZoneMap}}"
-              editor-mode="{{editorMode}}"
-              ticket-loading="{{ticketLoading}}"
-              tickets-list="{{dataZoneTicketsList}}"
-              editor-mode="{{editorMode}}"
-              mode="view"
-              spots-view-mode="{{spotsViewMode}}"
-              multiple-tickets-allowed="{{multipleTicketsAllowed}}"
-              on-zone-element-selected="_zoneElementSelected"
-              on-zone-element-selected-to-move="_zoneElementSelectedToMove"
-              on-zone-element-selected-to-move-end="_zoneElementSelectedToMoveEnd">
-          </nc-zone-map>
+          <div class="content-zone">
+            <paper-card>
+              <nc-zone-map
+                  language={{language}}
+                  data="{{dataZoneMap}}"
+                  zone-height={{zoneHeight}}
+                  editor-mode="{{editorMode}}"
+                  ticket-loading="{{ticketLoading}}"
+                  tickets-list="{{dataZoneTicketsList}}"
+                  editor-mode="{{editorMode}}"
+                  mode="view"
+                  spots-view-mode="{{spotsViewMode}}"
+                  multiple-tickets-allowed="{{multipleTicketsAllowed}}"
+                  on-zone-element-selected="_zoneElementSelected"
+                  on-zone-element-selected-to-move="_zoneElementSelectedToMove"
+                  on-zone-element-selected-to-move-end="_zoneElementSelectedToMoveEnd">
+              </nc-zone-map>
+            </paper-card>
+          </div>
         `;
       }
 
@@ -97,6 +108,25 @@ Copyright (c) 2017 Neo
           elementConf: Object,
           elementData: Object
         }
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        let card = this.shadowRoot.querySelector('.content-zone');
+        if (card.offsetHeight !== 0){
+          this.zoneHeight = card.offsetHeight;
+        }
+
+        window.addEventListener('resize', this._appResize.bind(this));
+      }
+
+      _appResize(){
+        let card = this.shadowRoot.querySelector('.content-zone');
+        if (card.offsetHeight !== 0){
+          this.zoneHeight = card.offsetHeight;
+        }
+        //this._itemsGridDataChanged();
       }
 
       _zoneElementSelected(element){
