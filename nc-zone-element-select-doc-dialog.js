@@ -19,7 +19,7 @@ class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior],
       <style>
       </style>
 
-      <paper-dialog id="selectDocDialog" class="modalNoApp" modal entry-animation="scale-up-animation">
+      <paper-dialog id="selectDocDialog" class="modalNoApp" modal entry-animation="scale-up-animation" dialog>
         <div class="header">
           <iron-icon icon="content-copy"></iron-icon><h3>{{localize('ELEMENT_SELECT_DOC_DIALOG_TITLE')}}</h3>
         </div>

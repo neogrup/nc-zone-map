@@ -110,6 +110,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
 
   _zoneHeightChanged(){
     this._dataChanged();
+    this._ticketsListChanged();
   }
 
   _dataChanged() {
@@ -156,6 +157,11 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
             this.updateSpot(slot, this.ticketsList.data.zones[iZones].elements[iElements])
           }
         }
+      }
+    } else {
+      for (iElements in this.data.elements){            
+        slot = '#slot' + this.data.id + this.data.elements[iElements].id; 
+        this.clearElement(slot);
       }
     }
   }
