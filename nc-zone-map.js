@@ -110,6 +110,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
 
   _zoneHeightChanged(){
     this._dataChanged();
+    this._ticketsListChanged();
   }
 
   _dataChanged() {
