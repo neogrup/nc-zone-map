@@ -157,6 +157,11 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
           }
         }
       }
+    } else {
+      for (iElements in this.data.elements){            
+        slot = '#slot' + this.data.id + this.data.elements[iElements].id; 
+        this.clearElement(slot);
+      }
     }
   }
 
