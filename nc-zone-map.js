@@ -62,7 +62,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
       data: {
         type: Object,
         value: {},
-        observer: '_dataChanged'
+        _observer: '_dataChanged'
       },
       ticketLoading: {
         type: Boolean,
@@ -78,27 +78,33 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
         type: String,
         value: 'edit'
       },
+      mapViewMode: {
+        type: String,
+        reflectToAttribute: true,
+        value: 'MAPFIT'
+      },
       spotsViewMode: {
         type: String,
-        reflectToAttribute: true
+        reflectToAttribute: true,
       },
       elements: {
         type: Array,
         value: []
       },
       multipleTicketsAllowed: Boolean,
-      zoneHeight: {
-        type: Number,
-        observer: '_zoneHeightChanged'
-      }
-
+      zoneHeight: Number,
+      zoneWidth: Number
     }
+  }
+
+  static get observers() {
+    return [
+      '_zoneDimensionChanged(zoneHeight, zoneWidth, mapViewMode)'
+    ];
   }
 
   connectedCallback(){
     super.connectedCallback();
-
-    
   }
   _openSelectDoc(e){
     this.$.selectDocDialog.set('elementData', {});
@@ -108,7 +114,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
     this.$.selectDocDialog.open();
   }
 
-  _zoneHeightChanged(){
+  _zoneDimensionChanged(){
     this._dataChanged();
     this._ticketsListChanged();
   }
@@ -127,13 +133,22 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
     }
     
     let factor = 1;
-    if (this.zoneHeight < this.data.height){
-      factor = this.data.height / this.zoneHeight;
+    
+    if (this.mapViewMode == 'MAPFIT') {
+      if ((this.data.width / this.zoneWidth) > (this.data.height / this.zoneHeight) ){
+        factor = this.data.width / this.zoneWidth;
+      } else{
+        factor = this.data.height / this.zoneHeight;
+      }
+    }
+
+    if (this.mapViewMode == 'MAPSCROLL') {
+      if (this.zoneHeight < this.data.height){
+        factor = this.data.height / this.zoneHeight;
+      }
     }
     
     this.factor = factor;
-
-
   }
 
   _ticketsListChanged(){
