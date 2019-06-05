@@ -1,20 +1,32 @@
 {
   "en":{
+    "BUTTON_ACCEPT": "Submit",
     "BUTTON_CLOSE": "Close",
     "BUTTON_NEW": "New",
     "ELEMENT_SELECT_DOC_DIALOG_TITLE": "Select document",
-    "ELEMENT_SELECT_DOC_DIALOG_SUBTITLE": "Selected spot: "
+    "ELEMENT_SELECT_DOC_DIALOG_SUBTITLE": "Selected spot: ",
+    "INPUT_ERROR_REQUIRED": "Required field",
+    "MESSAGE_ERROR_ZONE_SPOT_SELECTOR_SPOT_NOT_FOUND": "Spot not found",
+    "ZONE_SPOT_SELECTOR_TITLE": "Enter spot"
   },
   "es": {
+    "BUTTON_ACCEPT": "Aceptar",
     "BUTTON_CLOSE": "Cerrar",
     "BUTTON_NEW": "Nuevo",
     "ELEMENT_SELECT_DOC_DIALOG_TITLE": "Selecciona el documento",
-    "ELEMENT_SELECT_DOC_DIALOG_SUBTITLE": "Puesto seleccionado: "
+    "ELEMENT_SELECT_DOC_DIALOG_SUBTITLE": "Puesto seleccionado: ",
+    "INPUT_ERROR_REQUIRED": "Campo obligatorio",
+    "MESSAGE_ERROR_ZONE_SPOT_SELECTOR_SPOT_NOT_FOUND": "Puesto no encontrado",
+    "ZONE_SPOT_SELECTOR_TITLE": "Introduzca puesto"
   },
   "ca":{
+    "BUTTON_ACCEPT": "Acceptar",
     "BUTTON_CLOSE": "Tancar",
     "BUTTON_NEW": "Nou",
     "ELEMENT_SELECT_DOC_DIALOG_TITLE": "Selecciona el documento",
-    "ELEMENT_SELECT_DOC_DIALOG_SUBTITLE": "Lloc seleccionat: "
+    "ELEMENT_SELECT_DOC_DIALOG_SUBTITLE": "Lloc seleccionat: ",
+    "INPUT_ERROR_REQUIRED": "Camp obligatori",
+    "MESSAGE_ERROR_ZONE_SPOT_SELECTOR_SPOT_NOT_FOUND": "Lloc no trobat",
+    "ZONE_SPOT_SELECTOR_TITLE": "Introduïu lloc"
   }
 }
