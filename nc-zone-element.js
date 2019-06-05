@@ -1,9 +1,8 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { GestureEventListeners } from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import { timeOut } from '@polymer/polymer/lib/utils/async.js';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
+import { MixinZone } from './nc-zone-behavior.js';
 
-class NcZoneElement extends GestureEventListeners(PolymerElement) {
+class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
   static get template() {
     return html`
       <style>
@@ -47,6 +46,7 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
         }
 
         .data{
+          padding: 2px;
           font-weight: bold;
           font-size: 1.2em;
           /* background-color: rgba(255, 255, 255, 0.8); */
@@ -54,20 +54,46 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
           background: linear-gradient(to bottom, rgba(255,255,255,0.5) 100%, rgba(255,255,255,0.5) 100%);
           border-radius: 5px;
         }
+
+        .data:empty{
+          padding: 0px;
+          background: transparent;
+        }
+
+        .item-content-remaining-time-warning{
+          background-color: #FFC107;
+          color: black;
+          padding: 2px;
+          font-weight: bold;
+          font-size: 1.2em;
+          border-radius: 5px;
+        }
+
+        .item-content-remaining-time-alarm{
+          background-color: #F44336;
+          color: white;
+          padding: 2px;
+          font-weight: bold;
+          font-size: 1.2em;
+          border-radius: 5px;
+        }
+        .item-content-remaining-time-ok{
+          background-color: #4CAF50;
+          color: white;
+          padding: 2px;
+          font-weight: bold;
+          font-size: 1.2em;
+          border-radius: 5px;
+        }
       </style>
 
       <div class="image" _on-track="handleTrack" on-mousedown="_mouseDown" on-mouseup="_mouseUp" on-mouseout="_mouseOut" on-touchstart="_touchStart" on-touchmove="_touchMove" on-touchend="_touchEnd">
         <div class="element">
           {{elementConf.id}}
-          <div class="data" hidden\$="{{_hideDiv('DELIVEREDPRODUCTS', spotsViewMode)}}">
-            {{elementData.deliveredProducts}}
-          </div>
-          <div class="data" hidden\$="{{_hideDiv('AMOUNT', spotsViewMode)}}">
-            {{elementData.totalAmount}}
-          </div>
-          <div class="data" hidden\$="{{_hideDiv('DOCID', spotsViewMode)}}">
-            {{elementData.docId}}
-          </div>
+          <div class="data" hidden\$="{{_hideDiv('DELIVEREDPRODUCTS', spotsViewMode)}}">{{elementData.deliveredProducts}}</div>
+          <div class="data" hidden\$="{{_hideDiv('AMOUNT', spotsViewMode)}}">{{elementData.totalAmount}}</div>
+          <div class="data" hidden\$="{{_hideDiv('DOCID', spotsViewMode)}}">{{elementData.docId}}</div>
+          <div class$="{{itemContentRemainingTimeClassName}}" hidden\$="{{_hideDiv('REMAININGTIME', spotsViewMode)}}">{{elementData.docRemainingTime}}</div>
         </div>
         
       </div>
@@ -104,7 +130,11 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
         type: Number,
         value: 1,
         observer: '_factorChanged'
-      }
+      },
+      itemContentRemainingTimeClassName: {
+        type: String,
+        value: ''
+      },
     }
   }
 
@@ -153,13 +183,32 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
     let deliveredProducts = 0;
     let totalAmount = 0;
     let docId = '';
+    let docStart = '';
+    let docEnd = '';
+    let remainingTime = '';
+    let proformPrinted = false;
+    this.itemContentRemainingTimeClassName = '';
 
     for (iDocs in element.docs){
       if (element.docs[iDocs].stats){
         deliveredProducts = deliveredProducts + element.docs[iDocs].stats.deliveredProducts;
+
+        proformPrinted = (proformPrinted) ? proformPrinted : (element.docs[iDocs].stats.printProformaCount > 0) ? true : false;
+
+        if (element.docs[iDocs].stats.start){
+          docStart = (docStart === '') ? element.docs[iDocs].stats.start : (docStart <= element.docs[iDocs].stats.start) ? docStart : element.docs[iDocs].stats.start;
+        }
+        if (element.docs[iDocs].stats.end){
+          docEnd = (docEnd === '') ? element.docs[iDocs].stats.end : (docEnd >= element.docs[iDocs].stats.end) ? docEnd : element.docs[iDocs].stats.end;
+        }
       }
       totalAmount = totalAmount + element.docs[iDocs].totalAmount;
       docId = (docId === '') ? element.docs[iDocs].id : '+' + (Number(iDocs) + 1).toString();
+    }
+
+    if ((docStart != '') && (docEnd != '')){
+      remainingTime = this._getRemainingTime(this.systemTime, docStart, docEnd, 'time')
+      this.itemContentRemainingTimeClassName = this._getRemainingTime(this.systemTime, docStart, docEnd, 'classname')
     }
 
     deliveredProducts = !isNaN(deliveredProducts) ? deliveredProducts : 0;
@@ -167,19 +216,27 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
     this.set('elementData.deliveredProducts', deliveredProducts);
     this.set('elementData.totalAmount', totalAmount.toFixed(2));
     this.set('elementData.docId', docId);
+    this.set('elementData.docRemainingTime', remainingTime);
     this.set('elementData.docsCount', Number(iDocs) + 1);
     this.set('elementData.docs', element.docs);
 
-    /* TODO: proforma*/
-    this.updateStyles({
-      '--url-image': 'url(' + this.elementConf.urlImage.substring(1,this.elementConf.urlImage.lastIndexOf('.svg')) + '_o.svg' +')'
-    });
+    if (proformPrinted){
+      this.updateStyles({
+        '--url-image': 'url(' + this.elementConf.urlImage.substring(1,this.elementConf.urlImage.lastIndexOf('.svg')) + '_p.svg' +')'
+      });
+    } else {
+      this.updateStyles({
+        '--url-image': 'url(' + this.elementConf.urlImage.substring(1,this.elementConf.urlImage.lastIndexOf('.svg')) + '_o.svg' +')'
+      });
+    }
+    
   }
 
   clearElement(){
     this.set('elementData.deliveredProducts', '');
     this.set('elementData.totalAmount', '');
     this.set('elementData.docId', '');
+    this.set('elementData.docRemainingTime', '');
     this.set('elementData.docsCount', 0);
     this.set('elementData.docs', []);
 
@@ -188,92 +245,6 @@ class NcZoneElement extends GestureEventListeners(PolymerElement) {
     });
   }
 
-  _mouseDown(e){
-    if (e.button !== 0) return;
-    // console.log('_mouseDown');
-    // Only desktop
-    if ((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)) return;
-
-    this._debouncer = Debouncer.debounce(
-      this._debouncer,
-      timeOut.after(1000),
-      () => {
-        this._elementSelected('pressed');
-      }
-    );
-  }
-
-  _mouseUp(e){
-    if (e.button !== 0) return;
-    // console.log('_mouseUp');
-    // Only desktop
-    if ((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)) return;
-
-    if (this._debouncer){
-      if (this._debouncer._timer) {
-        this._debouncer.cancel();
-        this._elementSelected('clicked');
-      }
-    }
-  }
-
-  _mouseOut(e){
-    if (e.button !== 0) return;
-    if (this._debouncer){
-      if (this._debouncer._timer) {
-        this._debouncer.cancel();
-      }
-    }
-  }
-
-  _touchStart(e){
-    this._debouncer = Debouncer.debounce(
-      this._debouncer,
-      timeOut.after(1000),
-      () => {
-        this._elementSelected('pressed');
-      }
-    );
-  }
-
-  _touchMove(e){
-    if (this._debouncer){
-      if (this._debouncer._timer) {
-        this._debouncer.cancel();
-      }
-    }
-  }
-
-
-  _touchEnd(e){
-    if (this._debouncer._timer) {
-      this._debouncer.cancel();
-      this._elementSelected('clicked');
-    }
-  }
-
-  _elementSelected(selectMode){
-    if(this.mode == 'edit') return;
-
-    if (this.editorMode){
-      /* TODO: Maybe manage editorModeType, p.e. moveTicket, etc. */
-      this.dispatchEvent(new CustomEvent('element-selected-to-move-end', {detail: {elementConf: this.elementConf}, bubbles: true, composed: true }));
-    } else{
-      if ((!this.elementData.docsCount) || (this.elementData.docsCount === 0)){
-        this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf}, bubbles: true, composed: true }));
-      } else{
-        if (this.elementData.docsCount === 1) {
-          if ((this.multipleTicketsAllowed) && (selectMode === 'pressed')){  
-            this.dispatchEvent(new CustomEvent('element-open-select-doc', {detail: {elementConf: this.elementConf, elementData: this.elementData}, bubbles: true, composed: true }));
-          } else {
-            this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf, ticketId: this.elementData.docId}, bubbles: true, composed: true }));
-          }
-        } else{
-          this.dispatchEvent(new CustomEvent('element-open-select-doc', {detail: {elementConf: this.elementConf, elementData: this.elementData}, bubbles: true, composed: true }));
-        }
-      }
-    }
-  }
 
   // handleTrack(e) {
   //   if(this.mode !== 'edit') return;

@@ -41,12 +41,16 @@ Copyright (c) 2017 Neo
           <style>
             :host{
               display: block;
-              
+              --app-primary-color: rgb(33, 33, 33);
+              --app-secondary-color: #253855;
+              --app-accent-color: #FF9800;
+              --app-bg-color: #EEEEEE;
+              --app-scrollbar-color: var(--app-secondary-color);
             }
             
             div.content-zone{
-              height: 100vh;
-              width: 100%;
+              height: calc(100vh - 10px);
+              width: calc(100% - 0px);
               padding: 0px;
               position: relative;
             }
@@ -60,35 +64,38 @@ Copyright (c) 2017 Neo
           </style>
 
           <iron-ajax
-              auto
               id="getZoneMap"
-              url="data/zone-2"
+              url="data/zone"
               method="get"
               handle-as="json"
-              last-response="{{dataZoneMap}}">
+              last-response="{{dataZoneMap}}"
+              on-response="_handleGetZoneMapResponse">
           </iron-ajax>
 
           <iron-ajax id="getZoneTicketsList"
-              auto
               id="getTickets"
               method="get"
               url="data/tickets"
               handle-as="json"
-              last-response="{{dataZoneTicketsList}}">
+              last-response="{{dataZoneTicketsList}}"
+              on-response="_handleGetZoneTicketsListResponse">
           </iron-ajax>
             
           <div class="content-zone">
             <paper-card>
               <nc-zone-map
                   language={{language}}
-                  data="{{dataZoneMap}}"
+                  data="{{zoneMapData}}"
                   zone-height={{zoneHeight}}
+                  zone-width={{zoneWidth}}
+                  element-list-height="[[dimensionZoneElementList]]"
+                  element-list-width="[[dimensionZoneElementList]]"
                   editor-mode="{{editorMode}}"
                   ticket-loading="{{ticketLoading}}"
-                  tickets-list="{{dataZoneTicketsList}}"
-                  editor-mode="{{editorMode}}"
+                  tickets-list="{{zoneTicketsListData}}"
                   mode="view"
                   spots-view-mode="{{spotsViewMode}}"
+                  map-view-mode="{{mapViewMode}}"
                   multiple-tickets-allowed="{{multipleTicketsAllowed}}"
                   on-zone-element-selected="_zoneElementSelected"
                   on-zone-element-selected-to-move="_zoneElementSelectedToMove"
@@ -106,25 +113,50 @@ Copyright (c) 2017 Neo
             value: 'es'
           },
           elementConf: Object,
-          elementData: Object
+          elementData: Object,
+          mapViewMode: {
+            type: String,
+            value: 'MAPLIST'
+          },
+          spotsViewMode: {
+            type: String,
+            value: 'DOCID'
+          },
+          dimensionZoneElementList:{
+            type: Number,
+            value: 150
+          }
         }
       }
 
       connectedCallback() {
         super.connectedCallback();
+        this.$.getZoneMap.generateRequest();
 
+
+        window.addEventListener('resize', this._appResize.bind(this));
+      }
+
+      _handleGetZoneMapResponse(){
+        this.$.getZoneTicketsList.generateRequest();
+        this.zoneMapData = JSON.parse(JSON.stringify(this.dataZoneMap));
         let card = this.shadowRoot.querySelector('.content-zone');
         if (card.offsetHeight !== 0){
           this.zoneHeight = card.offsetHeight;
+          this.zoneWidth = card.offsetWidth;
         }
+      }
 
-        window.addEventListener('resize', this._appResize.bind(this));
+      _handleGetZoneTicketsListResponse(){
+        this.zoneTicketsListData = JSON.parse(JSON.stringify(this.dataZoneTicketsList));
+        
       }
 
       _appResize(){
         let card = this.shadowRoot.querySelector('.content-zone');
         if (card.offsetHeight !== 0){
           this.zoneHeight = card.offsetHeight;
+          this.zoneWidth = card.offsetWidth;
         }
         //this._itemsGridDataChanged();
       }

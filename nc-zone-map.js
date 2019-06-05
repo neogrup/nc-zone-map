@@ -1,7 +1,10 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/polymer/lib/elements/dom-repeat.js';
+import '@polymer/polymer/lib/elements/dom-if.js';
 import { GestureEventListeners } from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
 import './nc-zone-element.js';
+import './nc-zone-element-list.js';
+import './nc-zone-spot-selector.js';
 import './nc-zone-element-select-doc-dialog.js';
 
 class NcZoneMap extends GestureEventListeners(PolymerElement) {
@@ -17,39 +20,73 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
           overflow: auto;
         }
 
-        .zone-map{
+        .container{
           position: relative;
           height: 100%;
           width: 100%;
         }
 
-        .element{
-          position: absolute;
+        .zone-map-list{
+          @apply --layout-horizontal;
+          @apply --layout-wrap;
         }
-
       </style>
 
-      <div class="zone-map">
+      <div class="container" hidden$="{{hideZoneElement}}">
         <template is="dom-repeat" items="{{elements}}" as="element">
-          <nc-zone-element 
-              id="slot{{data.id}}{{element.id}}"
-              factor="{{factor}}"
-              language="{{language}}"  
-              element-conf="{{element}}" 
-              editor-mode="{{editorMode}}" 
-              mode="{{mode}}" 
-              spots-view-mode="{{spotsViewMode}}" 
-              multiple-tickets-allowed="{{multipleTicketsAllowed}}" 
-              on-element-open-select-doc="_openSelectDoc" 
-              on-element-selected="_elementSelected" 
-              on-element-selected-to-move-end="_elementSelectedToMoveEnd">
-          </nc-zone-element>
+            <nc-zone-element 
+                id="slot{{data.id}}{{element.id}}"
+                factor="{{factor}}"
+                language="{{language}}"  
+                element-conf="{{element}}" 
+                editor-mode="{{editorMode}}" 
+                mode="{{mode}}" 
+                spots-view-mode="{{spotsViewMode}}" 
+                multiple-tickets-allowed="{{multipleTicketsAllowed}}" 
+                system-time="{{ticketsList.systemTime}}"
+                on-element-open-select-doc="_openSelectDoc" 
+                on-element-selected="_elementSelected" 
+                on-element-selected-to-move-end="_elementSelectedToMoveEnd">
+            </nc-zone-element>
         </template>
+      </div>
+
+      <div class="container" hidden$="{{hideZoneElementList}}">
+        <div class="zone-map-list">
+          <template is="dom-repeat" items="{{elements}}" as="element">
+            <nc-zone-element-list
+                id="slotList{{data.id}}{{element.id}}"
+                language="{{language}}"  
+                element-conf="{{element}}" 
+                element-list-width="{{elementListWidth}}"
+                element-list-height="{{elementListHeight}}"
+                editor-mode="{{editorMode}}" 
+                mode="{{mode}}" 
+                spots-view-mode="{{spotsViewMode}}" 
+                multiple-tickets-allowed="{{multipleTicketsAllowed}}" 
+                system-time="{{ticketsList.systemTime}}"
+                on-element-open-select-doc="_openSelectDoc" 
+                on-element-selected="_elementSelected" 
+                on-element-selected-to-move-end="_elementSelectedToMoveEnd">
+            </nc-zone-element-list>
+          </template>
+        </div>
+      </div>
+
+      <div class="container" hidden$="{{hideZoneElementSelector}}">
+        <nc-zone-spot-selector
+            language="{{language}}"
+            zone-data="{{data}}"
+            tickets-list="{{ticketsList}}"
+            on-element-open-select-doc="_openSelectDoc" 
+            on-element-selected="_elementSelected">
+        </nc-zone-spot-selector>
       </div>
       
       <nc-zone-element-select-doc-dialog 
           id="selectDocDialog" 
           language="{{language}}" 
+          map-view-mode={{mapViewMode}}
           on-element-selected="_elementSelected" 
           on-element-selected-to-move="_elementSelectedToMove">
       </nc-zone-element-select-doc-dialog>
@@ -93,7 +130,32 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
       },
       multipleTicketsAllowed: Boolean,
       zoneHeight: Number,
-      zoneWidth: Number
+      zoneWidth: Number,
+      elementListWidth:{
+        type: Number,
+        value: 100,
+        reflectToAttribute: true,
+      },
+      elementListHeight:{
+        type: Number,
+        value: 100,
+        reflectToAttribute: true
+      },
+      hideZoneElement: {
+        type: Boolean,
+        reflectToAttribute: true,
+        value: false
+      },
+      hideZoneElementList: {
+        type: Boolean,
+        reflectToAttribute: true,
+        value: false
+      },
+      hideZoneElementSelector: {
+        type: Boolean,
+        reflectToAttribute: true,
+        value: false
+      },
     }
   }
 
@@ -105,6 +167,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
 
   connectedCallback(){
     super.connectedCallback();
+    
   }
   _openSelectDoc(e){
     this.$.selectDocDialog.set('elementData', {});
@@ -115,6 +178,32 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
   }
 
   _zoneDimensionChanged(){
+    switch (this.mapViewMode) {
+      case 'MAPFIT':
+        this.hideZoneElement = false;
+        this.hideZoneElementList = true;
+        this.hideZoneElementSelector = true;  
+        break;
+      case 'MAPSCROLL':
+        this.hideZoneElement = false;
+        this.hideZoneElementList = true;
+        this.hideZoneElementSelector = true;  
+        break;
+      case 'MAPLIST':
+        this.hideZoneElement = true;
+        this.hideZoneElementList = false;
+        this.hideZoneElementSelector = true;
+        break;
+
+      case 'MAPSELECTOR':
+          this.hideZoneElement = true;
+          this.hideZoneElementList = true;
+          this.hideZoneElementSelector = false;
+        break;
+      default:
+        break;
+    }
+
     this._dataChanged();
     this._ticketsListChanged();
   }
@@ -126,9 +215,17 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
     if (Object.keys(this.data).length === 0) return;
     if (this.data.elements.length > 0) {
       this.set('elements', this.data.elements);
-      for (iElements in this.data.elements){            
-        slot = '#slot' + this.data.id + this.data.elements[iElements].id; 
+      for (iElements in this.data.elements){        
+        if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
+          slot = '#slot' + this.data.id + this.data.elements[iElements].id; 
+        }
+
+        if (this.mapViewMode == 'MAPLIST') {
+          slot = '#slotList' + this.data.id + this.data.elements[iElements].id; 
+        }
+
         this.clearElement(slot);
+
       }
     }
     
@@ -140,6 +237,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
       } else{
         factor = this.data.height / this.zoneHeight;
       }
+      
     }
 
     if (this.mapViewMode == 'MAPSCROLL') {
@@ -161,21 +259,40 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
 
     if (this.ticketsList.data.zones.length > 0) {
       for (iElements in this.data.elements){            
-        slot = '#slot' + this.data.id + this.data.elements[iElements].id; 
+        if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
+          slot = '#slot' + this.data.id + this.data.elements[iElements].id; 
+        }
+
+        if (this.mapViewMode == 'MAPLIST') {
+          slot = '#slotList' + this.data.id + this.data.elements[iElements].id; 
+        }
         this.clearElement(slot);
       }
 
       for (iZones in this.ticketsList.data.zones){            
         if (this.data.id === this.ticketsList.data.zones[iZones].id){
           for (iElements in this.ticketsList.data.zones[iZones].elements){
-            slot = '#slot' + this.ticketsList.data.zones[iZones].id + this.ticketsList.data.zones[iZones].elements[iElements].id; 
+            if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
+              slot = '#slot' + this.ticketsList.data.zones[iZones].id + this.ticketsList.data.zones[iZones].elements[iElements].id; 
+            } 
+            if (this.mapViewMode == 'MAPLIST') {
+              
+              slot = '#slotList' + this.ticketsList.data.zones[iZones].id + this.ticketsList.data.zones[iZones].elements[iElements].id; 
+            }
             this.updateSpot(slot, this.ticketsList.data.zones[iZones].elements[iElements])
           }
         }
       }
     } else {
       for (iElements in this.data.elements){            
-        slot = '#slot' + this.data.id + this.data.elements[iElements].id; 
+        if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
+          slot = '#slot' + this.data.id + this.data.elements[iElements].id; 
+        }
+
+        if (this.mapViewMode == 'MAPLIST') {
+          slot = '#slotList' + this.data.id + this.data.elements[iElements].id; 
+        }
+
         this.clearElement(slot);
       }
     }
