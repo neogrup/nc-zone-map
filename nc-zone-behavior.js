@@ -169,8 +169,6 @@ let ncZoneBehavior = (base) =>
     }
   
     _elementSelected(selectMode){
-      console.log(this.elementConf)
-      console.log(this.elementData)
       if(this.mode == 'edit') return;
   
       if (this.editorMode){
