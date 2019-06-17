@@ -5,15 +5,12 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/neon-animation/neon-animation.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import moment from 'moment/src/moment.js';
-import 'moment/src/locale/es.js';
-import 'moment/src/locale/ca.js';
-import {formatMoney} from 'accounting-js';
 import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 import { AppLocalizeBehavior } from '@polymer/app-localize-behavior/app-localize-behavior.js';
 import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
+import { MixinZone } from './nc-zone-behavior.js';
 
-class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior], PolymerElement) {
+class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior], MixinZone(PolymerElement)) {
   static get template() {
     return html`
       <style>
@@ -34,7 +31,7 @@ class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior],
                   <div class="line-doc-amount">[[_formatPrice(doc.totalAmount)]]</div>
                 </div>
                 <div class="line-actions">
-                  <paper-icon-button icon="compare-arrows" drawer-toggle on-tap="_moveDoc"></paper-icon-button>
+                  <paper-icon-button icon="compare-arrows" drawer-toggle hidden$="{{hideMoveDocButton}}" on-tap="_moveDoc"></paper-icon-button>
                 </div>
               </div>
             </template>
@@ -53,7 +50,11 @@ class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior],
     return {
       language: String,
       elementConf: Object,
-      elementData: Object
+      elementData: Object,
+      mapViewMode: {
+        type: String
+      },
+      hideMoveDocButton: Boolean
     }
   }
   
@@ -72,7 +73,12 @@ class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior],
     /* Fix Modal paper-dialog appears behind its backdrop */
     var app = document.querySelector('body').firstElementChild.shadowRoot;
     dom(app).appendChild(this.$.selectDocDialog);
+
+    this.hideMoveDocButton = (this.mapViewMode === 'MAPSELECTOR') ? true : false;
+
     this.$.selectDocDialog.open();
+
+    
   }
 
   _newDoc(e){
@@ -94,27 +100,6 @@ class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior],
     this.elementConf = {};
     this.elementData = {};
     this.$.selectDocDialog.close();
-  }
-
-  _formatTime(time, language) {
-    let lLanguage = (language) ? language : 'es';
-    moment.locale(lLanguage);
-    let timeText = "";
-    if (time) {
-      // Check "time" UTC
-      if (time.substr(-1,1).toUpperCase() === "Z"){
-        timeText = moment.utc(time).format("HH:mm[h]");
-      } else {
-        timeText = moment(time).format("HH:mm[h]");
-      }
-    }
-    return timeText;
-  }
-
-  _formatPrice(price) {
-    let priceText = ""
-    priceText = formatMoney(price, {symbol: "€", precision: 2, thousand: ".", decimal: ",", format: "%v %s"});
-    return priceText;
   }
 }
 

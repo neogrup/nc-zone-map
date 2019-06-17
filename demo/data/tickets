@@ -1,6 +1,6 @@
 {
   "apiVersion": "1",
-  "systemTime": "2019-02-28T10:24:24.147303+01:00",
+  "systemTime": "2019-05-30T16:05:00.3397749+02:00",
   "data": {
     "zones": [
       {
@@ -55,13 +55,64 @@
                 "id": "145002",
                 "stats": {
                   "deliveredProducts": 4,
+                  "end": "2019-05-30T16:00:00",
                   "printInvoiceCount": 0,
-                  "printProformaCount": 0
+                  "printProformaCount": 0,
+                  "start": "2019-05-30T15:00:00",
+                  "status": "NONE"
                 },
                 "totalAmount": 7.2
               }
             ],
             "id": "03"
+          },
+          {
+            "docs": [
+              {
+                "attendedBy": "",
+                "attendedByName": "",
+                "created": "2019-02-28T10:23:36",
+                "customer": {
+                  "totalClients": 0
+                },
+                "edited": "2019-02-28T10:23:53",
+                "id": "145003",
+                "stats": {
+                  "deliveredProducts": 4,
+                  "end": "2019-05-30T18:30:42",
+                  "printInvoiceCount": 0,
+                  "printProformaCount": 0,
+                  "start": "2019-05-30T17:30:39",
+                  "status": "NONE"
+                },
+                "totalAmount": 7.2
+              }
+            ],
+            "id": "02"
+          },
+          {
+            "docs": [
+              {
+                "attendedBy": "",
+                "attendedByName": "",
+                "created": "2019-02-28T10:23:36",
+                "customer": {
+                  "totalClients": 0
+                },
+                "edited": "2019-02-28T10:23:53",
+                "id": "145004",
+                "stats": {
+                  "deliveredProducts": 4,
+                  "end": "2019-05-30T17:00:00",
+                  "printInvoiceCount": 0,
+                  "printProformaCount": 0,
+                  "start": "2019-05-30T16:00:00",
+                  "status": "NONE"
+                },
+                "totalAmount": 7.2
+              }
+            ],
+            "id": "04"
           }
         ],
         "id": "R002BAR"
