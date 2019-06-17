@@ -29,6 +29,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
         .zone-map-list{
           @apply --layout-horizontal;
           @apply --layout-wrap;
+          padding: 5px;
         }
       </style>
 

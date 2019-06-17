@@ -66,44 +66,6 @@ let ncZoneBehavior = (base) =>
       return priceText;
     }
 
-    _getRemainingTime(system, start, end, object){
-      let remainingTime = '';
-      let remainingTimeClassName = '';
-
-      let lSystemTime = new Date(system);
-      let lStartTime = new Date(start);
-      let lEndTime = new Date(end);
-
-
-      if (lSystemTime >= lStartTime){
-        remainingTime = (Math.floor((lEndTime.getTime() - lSystemTime.getTime()) / 1000 / 60));
-
-        if (remainingTime<0){
-          remainingTimeClassName = 'item-content-remaining-time-alarm';
-          remainingTime = '+' + Math.abs(remainingTime) + "'";
-        } else {
-
-          if (remainingTime>=15) {
-            remainingTimeClassName = 'item-content-remaining-time-ok';
-          } else {
-            remainingTimeClassName = 'item-content-remaining-time-warning';
-          }
-          remainingTime = remainingTime + "'";
-        }
-        
-      } else {
-        remainingTimeClassName = 'item-content-body-center-data';
-        remainingTime = '--';
-        
-      }
-
-      if (object==='time'){
-        return remainingTime ;
-      } else{
-        return remainingTimeClassName ;
-      }
-    }
-
     _mouseDown(e){
       if (e.button !== 0) return;
       // console.log('_mouseDown');

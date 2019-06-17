@@ -32,11 +32,11 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
           height: var(--element-content-height);
           margin: var(--element-margin);
           cursor: pointer;
-          border: 2px solid #5b91bd;
+          border: 1px solid var(--app-secondary-color, #253855);
         }
 
         .default{
-          border-color: #5b91bd;
+          border-color: var(--app-secondary-color, #253855);
           background-color: var(--element-content-background-color);
         }
 
@@ -53,42 +53,89 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
 
         .item-content-body-center-full {
           position: absolute;
-          top: 60%;
+          top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
           text-align: center;
         }
 
         .item-content-body-center-horizontal{
-          position: absolute;
-          top: 55%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          text-align: center;
+          @apply --layout-vertical;
         }
 
         .item-content-body-center-data{
-          margin: 10px 5px;
+          margin: 0 10px 10px 10px;
           padding: 2px;
           font-weight: bold;
           font-size: 1.2em;
           background: linear-gradient(to bottom, rgba(255,255,255,0.5) 100%, rgba(255,255,255,0.5) 100%);
           border-radius: 5px;
+          text-align: center;
         }
 
         .item-content-body-center-data:empty{
           padding: 0px;
           background: transparent;
         }
+
+        .item-content-body-center-small-data{
+          margin: 0 5px 5px 5px;
+          padding: 2px;
+          font-weight: bold;
+          font-size: 1em;
+          background: linear-gradient(to bottom, rgba(255,255,255,0.5) 100%, rgba(255,255,255,0.5) 100%);
+          border-radius: 5px;
+          text-align: center;
+        }
+
+        .item-content-body-center-small-data:empty{
+          padding: 0px;
+          background: transparent;
+        }
+
+        .item-content-empty-spot-id{
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          text-align: center;
+          font-weight: bold;
+          font-size: 3em;
+        }
+
+        .item-content-spot-id{
+          padding: 2px;
+          font-weight: bold;
+          font-size: 2em;
+          text-align: center;
+        }
+
+        .item-content-small-empty-spot-id{
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          text-align: center;
+          font-weight: bold;
+          font-size: 2em;
+        }
+
+        .item-content-small-spot-id{
+          padding: 2px;
+          font-weight: bold;
+          font-size: 1.5em;
+          text-align: center;
+        }
         
         .item-content-remaining-time-warning{
+          margin: 0 10px 10px 10px;
           position: relative;
           background-color: #FFC107;
           color: black;
-          margin: 10px 5px;
+          text-align: center;
           padding: 2px;
           font-weight: bold;
-          font-size: 1.2em;
+          font-size: 1.5em;
           border-radius: 5px;
         }
 
@@ -98,13 +145,14 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
         }
 
         .item-content-remaining-time-alarm{
+          margin: 0 10px 10px 10px;
           position: relative;
           background-color: #F44336;
           color: white;
-          margin: 10px 5px;
+          text-align: center;
           padding: 2px;
           font-weight: bold;
-          font-size: 1.2em;
+          font-size: 1.5em;
           border-radius: 5px;
         }
 
@@ -114,13 +162,14 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
         }
 
         .item-content-remaining-time-ok{
+          margin: 0 10px 10px 10px;
           position: relative;
           background-color: #4CAF50;
           color: white;
-          margin: 10px 5px;
+          text-align: center;
           padding: 2px;
           font-weight: bold;
-          font-size: 1.2em;
+          font-size: 1.5em;
           border-radius: 5px;
         }
 
@@ -131,7 +180,8 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
 
         .item-content-doc-start-end{
           @apply --layout-horizontal;
-          margin: 10px 5px;
+          @apply --layout-justified;
+          margin: 0 10px;
           font-weight: bold;
           font-size: 1.2em;
         }
@@ -148,7 +198,6 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
         }
 
         .item-content-doc-end{
-          margin-left: 10px;
           padding: 2px;
           background: linear-gradient(to bottom, rgba(255,255,255,0.5) 100%, rgba(255,255,255,0.5) 100%);
           border-radius: 5px;
@@ -168,23 +217,21 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
 
         <div class="element-container" on-mousedown="_mouseDown" on-mouseup="_mouseUp" on-mouseout="_mouseOut" on-touchstart="_touchStart" on-touchmove="_touchMove" on-touchend="_touchEnd">
           <div class="element-content default" _on-tap="_selectItem">
-            <div class="element-content-header">
-              <div class="element-content-header-spot">{{elementConf.id}}</div>
-            </div>
-            
             <template is="dom-if" if="[[elementSmall]]">
-              <div class="item-content-body-center-full">
-                <div class="item-content-body-center-data" hidden\$="{{_hideDiv('DELIVEREDPRODUCTS', spotsViewMode)}}">{{elementData.deliveredProducts}}</div>
-                <div class="item-content-body-center-data" hidden\$="{{_hideDiv('AMOUNT', spotsViewMode)}}">{{elementData.totalAmount}}</div>
-                <div class="item-content-body-center-data" hidden\$="{{_hideDiv('DOCID', spotsViewMode)}}">{{elementData.docId}}</div>
-                <div class$="{{itemContentRemainingTimeClassName}}" hidden\$="{{_hideDiv('REMAININGTIME', spotsViewMode)}}">{{elementData.docRemainingTime}}</div>
+              <div class="item-content-body-center-horizontal">
+                <div class$="{{itemContentSpotIdClassName}}">{{elementConf.id}}</div>
+                <div class="item-content-body-center-small-data" hidden\$="{{_hideDiv('DELIVEREDPRODUCTS', spotsViewMode)}}">{{elementData.deliveredProducts}}</div>
+                <div class="item-content-body-center-small-data" hidden\$="{{_hideDiv('AMOUNT', spotsViewMode)}}">{{elementData.totalAmount}}</div>
+                <div class="item-content-body-center-small-data" hidden\$="{{_hideDiv('DOCID', spotsViewMode)}}">{{elementData.docId}}</div>
+                <div class$="{{itemContentRemainingTimeClassName}}" style="font-size: 1.2em;" hidden\$="{{_hideDiv('REMAININGTIME', spotsViewMode)}}">{{elementData.docRemainingTime}}</div>
               </div>
             </template>
 
             <template is="dom-if" if="[[elementBig]]">
               <div class="item-content-body-center-horizontal">
+                <div class$="{{itemContentSpotIdClassName}}">{{elementConf.id}}</div>
                 <div class="item-content-body-center-data">{{elementData.docId}}</div>
-                <div class$="{{itemContentRemainingTimeClassName}}" style="font-size: 1.5em;">{{elementData.docRemainingTime}}</div>
+                <div class$="{{itemContentRemainingTimeClassName}}">{{elementData.docRemainingTime}}</div>
                 <div class="item-content-doc-start-end">
                   <div class="item-content-doc-start">{{_formatTime(elementData.docStart)}}</div>
                   <div class="item-content-doc-end">{{_formatTime(elementData.docEnd)}}</div>
@@ -210,8 +257,6 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
       elementData: {
         type: Object,
         value: {}
-        //reflectToAttribute: true,
-        //notify: true
       },
       editorMode: Boolean,
       mode: String,
@@ -258,8 +303,6 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
       this.elementBig = true;
     }
 
-
-
     this.showElement = false;
     if (this.elementConf.customers != 0 ){
       this.showElement = true;
@@ -279,30 +322,53 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
     let docStart = '';
     let docEnd = '';
     let remainingTime = '';
+    let status = '';
+    if(this.elementSmall){
+      this.itemContentSpotIdClassName = 'item-content-small-spot-id';
+    } else {
+      this.itemContentSpotIdClassName = 'item-content-spot-id';
+    }
+
     this.itemContentRemainingTimeClassName = '';
 
     for (iDocs in element.docs){
       if (element.docs[iDocs].stats){
         deliveredProducts = deliveredProducts + element.docs[iDocs].stats.deliveredProducts;
-
-        if (element.docs[iDocs].stats.start){
-          docStart = (docStart === '') ? element.docs[iDocs].stats.start : (docStart <= element.docs[iDocs].stats.start) ? docStart : element.docs[iDocs].stats.start;
-        }
-        if (element.docs[iDocs].stats.end){
-          docEnd = (docEnd === '') ? element.docs[iDocs].stats.end : (docEnd >= element.docs[iDocs].stats.end) ? docEnd : element.docs[iDocs].stats.end;
-        }
       }
       totalAmount = totalAmount + element.docs[iDocs].totalAmount;
       docId = (docId === '') ? element.docs[iDocs].id : '+' + (Number(iDocs) + 1).toString();
     }
 
-    if ((docStart != '') && (docEnd != '')){
-      remainingTime = this._getRemainingTime(this.systemTime, docStart, docEnd, 'time')
-      this.itemContentRemainingTimeClassName = this._getRemainingTime(this.systemTime, docStart, docEnd, 'classname')
-
-      if (this.itemContentRemainingTimeClassName === 'item-content-remaining-time-alarm'){
-        if (this.shadowRoot.querySelector('#ripple')){
-          this.shadowRoot.querySelector('#ripple').simulatedRipple();
+    if (element.stats){
+      if (element.stats.start){
+        docStart = element.stats.start;
+      }
+      if (element.stats.end){
+        docEnd = element.stats.end;
+      }
+      if (element.stats.remainingTime){
+        remainingTime = element.stats.remainingTime;
+      }
+      if (element.stats.status){
+        status = element.stats.status;
+        switch (status) {
+          case 'NONE':
+            this.itemContentRemainingTimeClassName = 'item-content-remaining-time-ok';
+            remainingTime = remainingTime +  "'";
+            break;
+          case 'WARNING':
+            this.itemContentRemainingTimeClassName = 'item-content-remaining-time-warning';
+            remainingTime = remainingTime +  "'";
+            break;
+          case 'ERROR':
+            this.itemContentRemainingTimeClassName = 'item-content-remaining-time-alarm';
+            remainingTime = '+' + Math.abs(remainingTime) + "'";
+            if (this.shadowRoot.querySelector('#ripple')){
+              this.shadowRoot.querySelector('#ripple').simulatedRipple();
+            }
+            break;
+          default:
+            break;
         }
       }
     }
@@ -325,6 +391,11 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
   }
 
   clearElement(){
+    if(this.elementSmall){
+      this.itemContentSpotIdClassName = 'item-content-small-empty-spot-id';
+    } else {
+      this.itemContentSpotIdClassName = 'item-content-empty-spot-id';
+    }
     this.set('elementData.deliveredProducts', '');
     this.set('elementData.totalAmount', '');
     this.set('elementData.docId', '');

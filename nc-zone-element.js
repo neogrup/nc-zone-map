@@ -49,8 +49,6 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
           padding: 2px;
           font-weight: bold;
           font-size: 1.2em;
-          /* background-color: rgba(255, 255, 255, 0.8); */
-          /* border: 1px solid black; */
           background: linear-gradient(to bottom, rgba(255,255,255,0.5) 100%, rgba(255,255,255,0.5) 100%);
           border-radius: 5px;
         }
@@ -95,7 +93,6 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
           <div class="data" hidden\$="{{_hideDiv('DOCID', spotsViewMode)}}">{{elementData.docId}}</div>
           <div class$="{{itemContentRemainingTimeClassName}}" hidden\$="{{_hideDiv('REMAININGTIME', spotsViewMode)}}">{{elementData.docRemainingTime}}</div>
         </div>
-        
       </div>
     `;
   }
@@ -111,8 +108,6 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
       elementData: {
         type: Object,
         value: {}
-        //reflectToAttribute: true,
-        //notify: true
       },
       editorMode: Boolean,
       mode: String,
@@ -183,8 +178,6 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     let deliveredProducts = 0;
     let totalAmount = 0;
     let docId = '';
-    let docStart = '';
-    let docEnd = '';
     let remainingTime = '';
     let proformPrinted = false;
     this.itemContentRemainingTimeClassName = '';
@@ -192,23 +185,38 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     for (iDocs in element.docs){
       if (element.docs[iDocs].stats){
         deliveredProducts = deliveredProducts + element.docs[iDocs].stats.deliveredProducts;
-
         proformPrinted = (proformPrinted) ? proformPrinted : (element.docs[iDocs].stats.printProformaCount > 0) ? true : false;
-
-        if (element.docs[iDocs].stats.start){
-          docStart = (docStart === '') ? element.docs[iDocs].stats.start : (docStart <= element.docs[iDocs].stats.start) ? docStart : element.docs[iDocs].stats.start;
-        }
-        if (element.docs[iDocs].stats.end){
-          docEnd = (docEnd === '') ? element.docs[iDocs].stats.end : (docEnd >= element.docs[iDocs].stats.end) ? docEnd : element.docs[iDocs].stats.end;
-        }
       }
       totalAmount = totalAmount + element.docs[iDocs].totalAmount;
       docId = (docId === '') ? element.docs[iDocs].id : '+' + (Number(iDocs) + 1).toString();
     }
 
-    if ((docStart != '') && (docEnd != '')){
-      remainingTime = this._getRemainingTime(this.systemTime, docStart, docEnd, 'time')
-      this.itemContentRemainingTimeClassName = this._getRemainingTime(this.systemTime, docStart, docEnd, 'classname')
+    if (element.stats){
+      if (element.stats.remainingTime){
+        remainingTime = element.stats.remainingTime;
+      }
+      if (element.stats.status){
+        status = element.stats.status;
+        switch (status) {
+          case 'NONE':
+            this.itemContentRemainingTimeClassName = 'item-content-remaining-time-ok';
+            remainingTime = remainingTime +  "'";
+            break;
+          case 'WARNING':
+            this.itemContentRemainingTimeClassName = 'item-content-remaining-time-warning';
+            remainingTime = remainingTime +  "'";
+            break;
+          case 'ERROR':
+            this.itemContentRemainingTimeClassName = 'item-content-remaining-time-alarm';
+            remainingTime = '+' + Math.abs(remainingTime) + "'";
+            if (this.shadowRoot.querySelector('#ripple')){
+              this.shadowRoot.querySelector('#ripple').simulatedRipple();
+            }
+            break;
+          default:
+            break;
+        }
+      }
     }
 
     deliveredProducts = !isNaN(deliveredProducts) ? deliveredProducts : 0;
