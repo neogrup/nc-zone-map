@@ -179,13 +179,11 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     let totalAmount = 0;
     let docId = '';
     let remainingTime = '';
-    let proformPrinted = false;
     this.itemContentRemainingTimeClassName = '';
 
     for (iDocs in element.docs){
       if (element.docs[iDocs].stats){
         deliveredProducts = deliveredProducts + element.docs[iDocs].stats.deliveredProducts;
-        proformPrinted = (proformPrinted) ? proformPrinted : (element.docs[iDocs].stats.printProformaCount > 0) ? true : false;
       }
       totalAmount = totalAmount + element.docs[iDocs].totalAmount;
       docId = (docId === '') ? element.docs[iDocs].id : '+' + (Number(iDocs) + 1).toString();
@@ -228,15 +226,9 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     this.set('elementData.docsCount', Number(iDocs) + 1);
     this.set('elementData.docs', element.docs);
 
-    if (proformPrinted){
-      this.updateStyles({
-        '--url-image': 'url(' + this.elementConf.urlImage.substring(1,this.elementConf.urlImage.lastIndexOf('.svg')) + '_p.svg' +')'
-      });
-    } else {
-      this.updateStyles({
-        '--url-image': 'url(' + this.elementConf.urlImage.substring(1,this.elementConf.urlImage.lastIndexOf('.svg')) + '_o.svg' +')'
-      });
-    }
+    this.updateStyles({
+      '--url-image': 'url(' + this.elementConf.urlImage.substring(1,this.elementConf.urlImage.lastIndexOf('.svg')) + '_o.svg' +')'
+    });
     
   }
 

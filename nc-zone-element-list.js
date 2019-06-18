@@ -384,7 +384,6 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
     this.set('elementData.docsCount', Number(iDocs) + 1);
     this.set('elementData.docs', element.docs);
 
-    /* TODO: proforma*/
     this.updateStyles({
       '--element-content-background-color': '#e8afaf'
     });
