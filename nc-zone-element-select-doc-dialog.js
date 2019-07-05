@@ -32,6 +32,7 @@ class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior],
                 </div>
                 <div class="line-actions">
                   <paper-icon-button icon="open-with" drawer-toggle hidden$="{{hideMoveDocButton}}" on-tap="_moveDoc"></paper-icon-button>
+                  <paper-icon-button icon="print" drawer-toggle hidden$="{{!showPrintTicketButton}}" on-tap="_printDoc"></paper-icon-button>
                 </div>
               </div>
             </template>
@@ -97,6 +98,13 @@ class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior],
 
   _moveDoc(e){
     this.dispatchEvent(new CustomEvent('element-selected-to-move', {detail: {elementConf: this.elementConf, ticketId: e.model.doc.id}, bubbles: true, composed: true }));
+    this.elementConf = {};
+    this.elementData = {};
+    this.$.selectDocDialog.close();
+  }
+
+  _printDoc(e){
+    this.dispatchEvent(new CustomEvent('element-selected-to-print', {detail: {elementConf: this.elementConf, ticketId: e.model.doc.id}, bubbles: true, composed: true }));
     this.elementConf = {};
     this.elementData = {};
     this.$.selectDocDialog.close();

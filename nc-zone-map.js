@@ -88,8 +88,10 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
           id="selectDocDialog" 
           language="{{language}}" 
           map-view-mode={{mapViewMode}}
+          show-print-ticket-button="{{showPrintTicketButton}}"
           on-element-selected="_elementSelected" 
-          on-element-selected-to-move="_elementSelectedToMove">
+          on-element-selected-to-move="_elementSelectedToMove"
+          on-element-selected-to-print="_elementSelectedToPrint">
       </nc-zone-element-select-doc-dialog>
     `;
   }
@@ -157,6 +159,10 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
         reflectToAttribute: true,
         value: false
       },
+      showPrintTicketButton: {
+        type: Boolean,
+        value: false
+      }
     }
   }
 
@@ -327,6 +333,14 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
       let spot = e.detail.elementConf;
       let ticketId = e.detail.ticketId;
       this.dispatchEvent(new CustomEvent('zone-element-selected-to-move', {detail: {spot: spot, ticketId: ticketId}, bubbles: true, composed: true }));
+    }
+  }
+
+  _elementSelectedToPrint(e){
+    if (!this.ticketLoading){
+      let spot = e.detail.elementConf;
+      let ticketId = e.detail.ticketId;
+      this.dispatchEvent(new CustomEvent('zone-element-selected-to-print', {detail: {spot: spot, ticketId: ticketId}, bubbles: true, composed: true }));
     }
   }
 
