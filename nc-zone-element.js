@@ -206,6 +206,7 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     let docId = '';
     let remainingTime = '';
     let printProformaCount = 0;
+    let printInvoiceCount = 0;
     this.itemContentRemainingTimeClassName = '';
     this.hideProformaInvoice = true;
     
@@ -214,6 +215,7 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
       if (element.docs[iDocs].stats){
         deliveredProducts = deliveredProducts + element.docs[iDocs].stats.deliveredProducts;
         printProformaCount = printProformaCount + element.docs[iDocs].stats.printProformaCount;
+        printInvoiceCount = printInvoiceCount + element.docs[iDocs].stats.printInvoiceCount;
       }
       totalAmount = totalAmount + element.docs[iDocs].totalAmount;
       docId = (docId === '') ? element.docs[iDocs].id : '+' + (Number(iDocs) + 1).toString();
@@ -249,10 +251,6 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
 
     deliveredProducts = !isNaN(deliveredProducts) ? deliveredProducts : 0;
 
-    if (printProformaCount > 0) {
-      this.hideProformaInvoice = false;
-    }
-
     this.set('elementData.deliveredProducts', deliveredProducts);
     this.set('elementData.totalAmount', totalAmount.toFixed(2));
     this.set('elementData.docId', docId);
@@ -260,10 +258,16 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     this.set('elementData.docsCount', Number(iDocs) + 1);
     this.set('elementData.docs', element.docs);
 
-    this.updateStyles({
-      '--url-image': 'url(' + this.elementConf.urlImage.substring(1,this.elementConf.urlImage.lastIndexOf('.svg')) + '_o.svg' +')'
-    });
-    
+    if ((printProformaCount > 0)|| (printInvoiceCount > 0)) {
+      this.hideProformaInvoice = false;
+      this.updateStyles({
+        '--url-image': 'url(' + this.elementConf.urlImage.substring(1,this.elementConf.urlImage.lastIndexOf('.svg')) + '_p.svg' +')'
+      });
+    } else {
+      this.updateStyles({
+        '--url-image': 'url(' + this.elementConf.urlImage.substring(1,this.elementConf.urlImage.lastIndexOf('.svg')) + '_o.svg' +')'
+      });
+    }  
   }
 
   clearElement(){
