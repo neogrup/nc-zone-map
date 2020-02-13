@@ -346,7 +346,9 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
 
   _elementSelectedToMoveEnd(e){
     let spot = e.detail.elementConf;
-    this.dispatchEvent(new CustomEvent('zone-element-selected-to-move-end', {detail: {spot: spot}, bubbles: true, composed: true }));
+    if (spot.customers != 0 ){
+      this.dispatchEvent(new CustomEvent('zone-element-selected-to-move-end', {detail: {spot: spot}, bubbles: true, composed: true }));
+    }
   }
 }
 
