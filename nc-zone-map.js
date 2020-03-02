@@ -36,7 +36,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
       <div class="container" hidden$="{{hideZoneElement}}">
         <template is="dom-repeat" items="{{elements}}" as="element">
             <nc-zone-element 
-                id="slot{{data.id}}{{element.id}}"
+                id="{{_getSlotId('slot',element.id)}}"
                 factor="{{factor}}"
                 language="{{language}}"  
                 element-conf="{{element}}" 
@@ -56,7 +56,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
         <div class="zone-map-list">
           <template is="dom-repeat" items="{{elements}}" as="element">
             <nc-zone-element-list
-                id="slotList{{data.id}}{{element.id}}"
+                id="{{_getSlotId('slotList',element.id)}}"
                 language="{{language}}"  
                 element-conf="{{element}}" 
                 element-list-width="{{elementListWidth}}"
@@ -176,6 +176,12 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
     super.connectedCallback();
     
   }
+
+  _getSlotId(prefix, elementId){
+    let spotId = prefix + this.data.id + elementId.replace(/ /g, "_");
+    return spotId
+  }
+
   _openSelectDoc(e){
     this.$.selectDocDialog.set('elementData', {});
     this.$.selectDocDialog.set('elementConf', {});
@@ -224,11 +230,11 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
       this.set('elements', this.data.elements);
       for (iElements in this.data.elements){        
         if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
-          slot = '#slot' + this.data.id + this.data.elements[iElements].id; 
+          slot = '#slot' + this.data.id + this.data.elements[iElements].id.replace(/ /g, "_"); 
         }
 
         if (this.mapViewMode == 'MAPLIST') {
-          slot = '#slotList' + this.data.id + this.data.elements[iElements].id; 
+          slot = '#slotList' + this.data.id + this.data.elements[iElements].id.replace(/ /g, "_"); 
         }
 
         this.clearElement(slot);
@@ -267,11 +273,11 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
     if (this.ticketsList.data.zones.length > 0) {
       for (iElements in this.data.elements){            
         if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
-          slot = '#slot' + this.data.id + this.data.elements[iElements].id; 
+          slot = '#slot' + this.data.id + this.data.elements[iElements].id.replace(/ /g, "_"); 
         }
 
         if (this.mapViewMode == 'MAPLIST') {
-          slot = '#slotList' + this.data.id + this.data.elements[iElements].id; 
+          slot = '#slotList' + this.data.id + this.data.elements[iElements].id.replace(/ /g, "_"); 
         }
         this.clearElement(slot);
       }
@@ -280,11 +286,10 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
         if (this.data.id === this.ticketsList.data.zones[iZones].id){
           for (iElements in this.ticketsList.data.zones[iZones].elements){
             if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
-              slot = '#slot' + this.ticketsList.data.zones[iZones].id + this.ticketsList.data.zones[iZones].elements[iElements].id; 
+              slot = '#slot' + this.ticketsList.data.zones[iZones].id + this.ticketsList.data.zones[iZones].elements[iElements].id.replace(/ /g, "_"); 
             } 
             if (this.mapViewMode == 'MAPLIST') {
-              
-              slot = '#slotList' + this.ticketsList.data.zones[iZones].id + this.ticketsList.data.zones[iZones].elements[iElements].id; 
+              slot = '#slotList' + this.ticketsList.data.zones[iZones].id + this.ticketsList.data.zones[iZones].elements[iElements].id.replace(/ /g, "_"); 
             }
             this.updateSpot(slot, this.ticketsList.data.zones[iZones].elements[iElements])
           }
@@ -293,11 +298,11 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
     } else {
       for (iElements in this.data.elements){            
         if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
-          slot = '#slot' + this.data.id + this.data.elements[iElements].id; 
+          slot = '#slot' + this.data.id + this.data.elements[iElements].id.replace(/ /g, "_"); 
         }
 
         if (this.mapViewMode == 'MAPLIST') {
-          slot = '#slotList' + this.data.id + this.data.elements[iElements].id; 
+          slot = '#slotList' + this.data.id + this.data.elements[iElements].id.replace(/ /g, "_"); 
         }
 
         this.clearElement(slot);
