@@ -144,7 +144,7 @@ let ncZoneBehavior = (base) =>
             if ((this.multipleTicketsAllowed) && (selectMode === 'pressed')){  
               this.dispatchEvent(new CustomEvent('element-open-select-doc', {detail: {elementConf: this.elementConf, elementData: this.elementData}, bubbles: true, composed: true }));
             } else {
-              this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf, ticketId: this.elementData.docId}, bubbles: true, composed: true }));
+              this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf, elementData: this.elementData.docs[0], ticketId: this.elementData.docId}, bubbles: true, composed: true }));
             }
           } else{
             this.dispatchEvent(new CustomEvent('element-open-select-doc', {detail: {elementConf: this.elementConf, elementData: this.elementData}, bubbles: true, composed: true }));

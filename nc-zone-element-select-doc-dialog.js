@@ -90,7 +90,7 @@ class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior],
   }
 
   _docSelected(e){
-    this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf, ticketId: e.model.doc.id}, bubbles: true, composed: true }));
+    this.dispatchEvent(new CustomEvent('element-selected', {detail: {elementConf: this.elementConf, elementData: e.model.doc, ticketId: e.model.doc.id}, bubbles: true, composed: true }));
     this.elementConf = {};
     this.elementData = {};
     this.$.selectDocDialog.close();

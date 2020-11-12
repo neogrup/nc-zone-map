@@ -325,10 +325,21 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
   _elementSelected(e){
     if (!this.ticketLoading){
       let spot = e.detail.elementConf;
+      let ticket = e.detail.elementData;
       let ticketId = e.detail.ticketId;
       if (spot.customers != 0 ){
-        this.ticketLoading = true;
-        this.dispatchEvent(new CustomEvent('zone-element-selected', {detail: {spot: spot, ticketId: ticketId}, bubbles: true, composed: true }));
+        if (ticket){
+          if ((ticket.status == 'closed') && (ticket.delivered == 'N')){
+            this.dispatchEvent(new CustomEvent('zone-element-selected-to-show-ticket-info', {detail: {spot: spot, ticketId: ticketId}, bubbles: true, composed: true }));
+          } else {
+            this.ticketLoading = true;
+            this.dispatchEvent(new CustomEvent('zone-element-selected', {detail: {spot: spot, ticketId: ticketId}, bubbles: true, composed: true }));
+          }
+        } else {
+          this.ticketLoading = true;
+          this.dispatchEvent(new CustomEvent('zone-element-selected', {detail: {spot: spot, ticketId: ticketId}, bubbles: true, composed: true }));
+        }
+
       }
     }
   }
