@@ -57,6 +57,30 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
           border-radius: 5px;
         }
 
+        .spot-name-proforma{
+          padding: 2px;
+          background: #253855;
+          color: white;
+          border-radius: 5px;
+        }
+
+        .spot-name-produced-products-pf{
+          padding: 2px;
+          background: #2E7D32;
+          color: white;
+          border-radius: 5px;
+        }
+
+        .spot-name-closed-not-delivered{
+          padding: 2px;
+          background: #8E24AA;
+          color: white; 
+          /* background: #FFA726; 
+          color: black;*/
+          border-radius: 5px;
+        }
+        
+
         .data{
           padding: 2px;
           font-weight: bold;
@@ -105,10 +129,7 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
       <div class="image" _on-track="handleTrack" on-mousedown="_mouseDown" on-mouseup="_mouseUp" on-mouseout="_mouseOut" on-touchstart="_touchStart" on-touchmove="_touchMove" on-touchend="_touchEnd">
         <div class="element">
           <div class="spot">
-            <div class="spot-name">{{elementConf.id}}</div>
-            <div class="proforma-invoice" hidden\$="{{hideProformaInvoice}}">
-              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file-invoice-dollar" class="svg-inline--fa fa-file-invoice-dollar fa-w-12" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M377 105L279.1 7c-4.5-4.5-10.6-7-17-7H256v128h128v-6.1c0-6.3-2.5-12.4-7-16.9zm-153 31V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zM64 72c0-4.42 3.58-8 8-8h80c4.42 0 8 3.58 8 8v16c0 4.42-3.58 8-8 8H72c-4.42 0-8-3.58-8-8V72zm0 80v-16c0-4.42 3.58-8 8-8h80c4.42 0 8 3.58 8 8v16c0 4.42-3.58 8-8 8H72c-4.42 0-8-3.58-8-8zm144 263.88V440c0 4.42-3.58 8-8 8h-16c-4.42 0-8-3.58-8-8v-24.29c-11.29-.58-22.27-4.52-31.37-11.35-3.9-2.93-4.1-8.77-.57-12.14l11.75-11.21c2.77-2.64 6.89-2.76 10.13-.73 3.87 2.42 8.26 3.72 12.82 3.72h28.11c6.5 0 11.8-5.92 11.8-13.19 0-5.95-3.61-11.19-8.77-12.73l-45-13.5c-18.59-5.58-31.58-23.42-31.58-43.39 0-24.52 19.05-44.44 42.67-45.07V232c0-4.42 3.58-8 8-8h16c4.42 0 8 3.58 8 8v24.29c11.29.58 22.27 4.51 31.37 11.35 3.9 2.93 4.1 8.77.57 12.14l-11.75 11.21c-2.77 2.64-6.89 2.76-10.13.73-3.87-2.43-8.26-3.72-12.82-3.72h-28.11c-6.5 0-11.8 5.92-11.8 13.19 0 5.95 3.61 11.19 8.77 12.73l45 13.5c18.59 5.58 31.58 23.42 31.58 43.39 0 24.53-19.05 44.44-42.67 45.07z"></path></svg>
-            </div>
+            <div class$="{{spotIdClassName}}">{{elementConf.id}}</div>
           </div>
           <div class="data" hidden\$="{{_hideDiv('DELIVEREDPRODUCTS', spotsViewMode)}}">{{elementData.deliveredProducts}}</div>
           <div class="data" hidden\$="{{_hideDiv('AMOUNT', spotsViewMode)}}">{{elementData.totalAmount}}</div>
@@ -147,6 +168,10 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
         type: Number,
         value: 1,
         observer: '_factorChanged'
+      },
+      spotIdClassName: {
+        type: String,
+        value: ''
       },
       itemContentRemainingTimeClassName: {
         type: String,
@@ -205,8 +230,14 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     let totalAmount = 0;
     let docId = '';
     let remainingTime = '';
+    let noProforma = 'N';
     let printProformaCount = 0;
     let printInvoiceCount = 0;
+    let producedProductsPF = 0;
+    let status = '';
+    let docStatus = '';
+    let docDelivered = '';
+    this.spotIdClassName = 'spot-name';
     this.itemContentRemainingTimeClassName = '';
     this.hideProformaInvoice = true;
     
@@ -214,17 +245,22 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     for (iDocs in element.docs){
       if (element.docs[iDocs].stats){
         deliveredProducts = deliveredProducts + element.docs[iDocs].stats.deliveredProducts;
+        noProforma = element.docs[iDocs].stats.noProforma;
+        producedProductsPF = element.docs[iDocs].stats.producedProductsPF;
         printProformaCount = printProformaCount + element.docs[iDocs].stats.printProformaCount;
         printInvoiceCount = printInvoiceCount + element.docs[iDocs].stats.printInvoiceCount;
       }
       totalAmount = totalAmount + element.docs[iDocs].totalAmount;
       docId = (docId === '') ? element.docs[iDocs].id : '+' + (Number(iDocs) + 1).toString();
+      docStatus = element.docs[iDocs].status;
+      docDelivered = element.docs[iDocs].delivered;
     }
 
     if (element.stats){
       if (element.stats.remainingTime){
         remainingTime = element.stats.remainingTime;
       }
+      
       if (element.stats.status){
         status = element.stats.status;
         switch (status) {
@@ -249,6 +285,19 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
       }
     }
 
+
+    if (producedProductsPF > 0) {
+      this.spotIdClassName = 'spot-name-produced-products-pf';
+    } else {
+      if ((docStatus == 'closed') && (docDelivered == 'N')){
+        this.spotIdClassName = 'spot-name-closed-not-delivered';
+      }
+      else if (((printProformaCount > 0) || (printInvoiceCount > 0)) && (noProforma == 'N')){
+        this.spotIdClassName = 'spot-name-proforma';
+      }
+    }
+
+
     deliveredProducts = !isNaN(deliveredProducts) ? deliveredProducts : 0;
 
     this.set('elementData.deliveredProducts', deliveredProducts);
@@ -258,7 +307,7 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     this.set('elementData.docsCount', Number(iDocs) + 1);
     this.set('elementData.docs', element.docs);
 
-    if ((printProformaCount > 0)|| (printInvoiceCount > 0)) {
+    if (((printProformaCount > 0) || (printInvoiceCount > 0)) && (noProforma == 'N')) {
       this.hideProformaInvoice = false;
       this.updateStyles({
         '--url-image': 'url(' + this.elementConf.urlImage.substring(1,this.elementConf.urlImage.lastIndexOf('.svg')) + '_p.svg' +')'
@@ -277,6 +326,8 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     this.set('elementData.docRemainingTime', '');
     this.set('elementData.docsCount', 0);
     this.set('elementData.docs', []);
+    this.spotIdClassName = 'spot-name';
+    this.itemContentRemainingTimeClassName = '';
     this.hideProformaInvoice = true;
 
     this.updateStyles({
