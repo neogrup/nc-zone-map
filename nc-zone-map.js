@@ -330,6 +330,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
       if (spot.customers != 0 ){
         if (ticket){
           if ((ticket.status == 'closed') && (ticket.delivered == 'N')){
+            this.ticketLoading = true;
             this.dispatchEvent(new CustomEvent('zone-element-selected-to-show-ticket-info', {detail: {spot: spot, ticketId: ticketId}, bubbles: true, composed: true }));
           } else {
             this.ticketLoading = true;
