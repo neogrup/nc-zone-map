@@ -2,6 +2,8 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/polymer/lib/elements/dom-repeat.js';
 import '@polymer/polymer/lib/elements/dom-if.js';
 import { GestureEventListeners } from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
+import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 import './nc-zone-element.js';
 import './nc-zone-element-list.js';
 import './nc-zone-spot-selector.js';
@@ -331,18 +333,35 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
         if (ticket){
           if ((ticket.status == 'closed') && (ticket.delivered == 'N')){
             this.ticketLoading = true;
+            this._checkTicketLoadingTime();
             this.dispatchEvent(new CustomEvent('zone-element-selected-to-show-ticket-info', {detail: {spot: spot, ticketId: ticketId}, bubbles: true, composed: true }));
           } else {
             this.ticketLoading = true;
+            this._checkTicketLoadingTime();
             this.dispatchEvent(new CustomEvent('zone-element-selected', {detail: {spot: spot, ticketId: ticketId}, bubbles: true, composed: true }));
           }
         } else {
           this.ticketLoading = true;
+          this._checkTicketLoadingTime();
           this.dispatchEvent(new CustomEvent('zone-element-selected', {detail: {spot: spot, ticketId: ticketId}, bubbles: true, composed: true }));
         }
 
       }
     }
+  }
+
+  _checkTicketLoadingTime(e){
+    this._ticketLoadingTimeDebouncer = Debouncer.debounce(this._ticketLoadingTimeDebouncer,
+      timeOut.after(4000),
+      () => this._resetTicketLoading()
+    );
+  }
+
+  _resetTicketLoading(){
+    if(this.ticketLoading){
+      this.ticketLoading = false;
+    }
+
   }
 
   _elementSelectedToMove(e){
