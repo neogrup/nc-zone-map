@@ -28,7 +28,7 @@ class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior],
                 <div class="line-container" on-tap="_docSelected">
                   <div class="line-doc-id">#[[doc.id]]</div>
                   <div class="line-doc-edited">{{_formatTime(doc.edited)}}</div>
-                  <div class="line-doc-amount">[[_formatPrice(doc.totalAmount)]]</div>
+                  <div class="line-doc-amount">[[_formatPriceCur(doc.totalAmount, doc.currencySymbol)]]</div>
                 </div>
                 <div class="line-actions">
                   <paper-icon-button icon="open-with" drawer-toggle hidden$="{{hideMoveDocButton}}" on-tap="_moveDoc"></paper-icon-button>
