@@ -82,7 +82,7 @@ let ncZoneBehavior = (base) =>
   
       this._debouncer = Debouncer.debounce(
         this._debouncer,
-        timeOut.after(1000),
+        timeOut.after(650),
         () => {
           this._elementSelected('pressed');
         }
