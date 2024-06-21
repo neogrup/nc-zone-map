@@ -45,7 +45,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
                 spots-view-mode="{{spotsViewMode}}" 
                 multiple-tickets-allowed="{{multipleTicketsAllowed}}" 
                 system-time="{{ticketsList.systemTime}}"
-                show-multiple-on-select="[[showMultipleOnSelect]]"
+                show-multiple-on-select="{{showMultipleOnSelect}}"
                 on-element-open-select-doc="_openSelectDoc" 
                 on-element-selected="_elementSelected" 
                 on-element-selected-to-move-end="_elementSelectedToMoveEnd">
@@ -67,7 +67,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
                 spots-view-mode="{{spotsViewMode}}" 
                 multiple-tickets-allowed="{{multipleTicketsAllowed}}" 
                 system-time="{{ticketsList.systemTime}}"
-                show-multiple-on-select="[[showMultipleOnSelect]]"
+                show-multiple-on-select="{{showMultipleOnSelect}}"
                 on-element-open-select-doc="_openSelectDoc" 
                 on-element-selected="_elementSelected" 
                 on-element-selected-to-move-end="_elementSelectedToMoveEnd">
@@ -81,7 +81,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
             language="{{language}}"
             zone-data="{{data}}"
             tickets-list="{{ticketsList}}"
-            show-multiple-on-select="[[showMultipleOnSelect]]"
+            show-multiple-on-select="{{showMultipleOnSelect}}"
             on-element-open-select-doc="_openSelectDoc" 
             on-element-selected="_elementSelected">
         </nc-zone-spot-selector>
@@ -168,7 +168,8 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
       },
       showMultipleOnSelect: {
         type: Boolean,
-        value: false
+        value: false,
+        notify: true
       }
     }
   }
