@@ -169,7 +169,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
       showMultipleOnSelect: {
         type: Boolean,
         value: false,
-        notify: true
+        reflectToAttribute: true
       }
     }
   }
