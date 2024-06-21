@@ -331,6 +331,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
   }
 
   _elementSelected(e){
+    this.showMultipleOnSelect = false;
     if (!this.ticketLoading){
       let spot = e.detail.elementConf;
       let ticket = e.detail.elementData;

@@ -183,7 +183,8 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
       },
       showMultipleOnSelect: {
         type: Boolean,
-        value: false
+        value: false,
+        notify: true
       },
     }
   }
