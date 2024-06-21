@@ -191,7 +191,8 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
   }
 
   _openSelectDoc(e){
-    this.showMultipleOnSelect = false;
+    //this.showMultipleOnSelect = false;
+    this.set('showMultipleOnSelect', false);
     this.$.selectDocDialog.set('elementData', {});
     this.$.selectDocDialog.set('elementConf', {});
     this.$.selectDocDialog.set('elementData', e.detail.elementData);
@@ -332,7 +333,8 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
   }
 
   _elementSelected(e){
-    this.showMultipleOnSelect = false;
+    //this.showMultipleOnSelect = false;
+    this.set('showMultipleOnSelect', false);
     if (!this.ticketLoading){
       let spot = e.detail.elementConf;
       let ticket = e.detail.elementData;
