@@ -69,6 +69,10 @@ class NcZoneSpotSelector extends mixinBehaviors([AppLocalizeBehavior], MixinZone
         type: Object,
         value: {}
       },
+      showMultipleOnSelect: {
+        type: Boolean,
+        value: false
+      },
     }
   }
 

@@ -45,6 +45,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
                 spots-view-mode="{{spotsViewMode}}" 
                 multiple-tickets-allowed="{{multipleTicketsAllowed}}" 
                 system-time="{{ticketsList.systemTime}}"
+                show-multiple-on-select="[[showMultipleOnSelect]]"
                 on-element-open-select-doc="_openSelectDoc" 
                 on-element-selected="_elementSelected" 
                 on-element-selected-to-move-end="_elementSelectedToMoveEnd">
@@ -66,6 +67,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
                 spots-view-mode="{{spotsViewMode}}" 
                 multiple-tickets-allowed="{{multipleTicketsAllowed}}" 
                 system-time="{{ticketsList.systemTime}}"
+                show-multiple-on-select="[[showMultipleOnSelect]]"
                 on-element-open-select-doc="_openSelectDoc" 
                 on-element-selected="_elementSelected" 
                 on-element-selected-to-move-end="_elementSelectedToMoveEnd">
@@ -79,6 +81,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
             language="{{language}}"
             zone-data="{{data}}"
             tickets-list="{{ticketsList}}"
+            show-multiple-on-select="[[showMultipleOnSelect]]"
             on-element-open-select-doc="_openSelectDoc" 
             on-element-selected="_elementSelected">
         </nc-zone-spot-selector>
@@ -162,6 +165,10 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
       showPrintTicketButton: {
         type: Boolean,
         value: false
+      },
+      showMultipleOnSelect: {
+        type: Boolean,
+        value: false
       }
     }
   }
@@ -183,6 +190,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
   }
 
   _openSelectDoc(e){
+    this.showMultipleOnSelect = false;
     this.$.selectDocDialog.set('elementData', {});
     this.$.selectDocDialog.set('elementConf', {});
     this.$.selectDocDialog.set('elementData', e.detail.elementData);
