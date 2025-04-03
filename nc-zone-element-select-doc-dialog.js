@@ -27,6 +27,10 @@ class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior],
               <div class="line">
                 <div class="line-container" on-tap="_docSelected">
                   <div class="line-doc-id">#[[doc.id]]</div>
+                  
+                  <div class="line-doc-id" hidden\$="{{_hideDiv('DOCID', spotsViewMode)}}">#{{doc.id}}</div>
+                  <div class="line-doc-id" hidden\$="{{_hideDiv('ORDERID', spotsViewMode)}}">#[[_getOrderIDSel(doc, doc.idOrder)]]</div>
+
                   <div class="line-doc-edited">{{_formatTime(doc.edited)}}</div>
                   <div class="line-doc-amount">[[_formatPriceCur(doc.totalAmount, doc.currencySymbol)]]</div>
                 </div>
@@ -54,6 +58,10 @@ class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior],
       elementData: Object,
       mapViewMode: {
         type: String
+      },
+      spotsViewMode: {
+        type: String,
+        value: ''
       },
       hideMoveDocButton: Boolean
     }
@@ -108,6 +116,14 @@ class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior],
     this.elementConf = {};
     this.elementData = {};
     this.$.selectDocDialog.close();
+  }
+
+  _getOrderIDSel(elem) { // cannot be the same as in behaviour, struct is diferrent
+    let v = elem.id;
+      if (typeof elem.idOrder != 'undefined') {
+        v = elem.idOrder;
+      }
+      return v;
   }
 }
 

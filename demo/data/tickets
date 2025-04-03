@@ -16,6 +16,7 @@
                 },
                 "edited": "2019-02-28T10:24:01",
                 "id": "145004",
+                "idOrder": "P004",
                 "stats": {
                   "deliveredProducts": 3,
                   "printInvoiceCount": 0,

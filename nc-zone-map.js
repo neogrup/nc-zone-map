@@ -91,6 +91,7 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
           id="selectDocDialog" 
           language="{{language}}" 
           map-view-mode={{mapViewMode}}
+          spots-view-mode="{{spotsViewMode}}" 
           show-print-ticket-button="{{showPrintTicketButton}}"
           on-element-selected="_elementSelected" 
           on-element-selected-to-move="_elementSelectedToMove"
