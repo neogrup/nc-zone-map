@@ -319,8 +319,6 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     this.set('elementData.docsCount', Number(iDocs) + 1);
     this.set('elementData.docs', element.docs);
 
-    console.log(this.elementData);
-
     let pathimage = this.elementConf.urlImage.substring(0,this.elementConf.urlImage.lastIndexOf('.svg'));
 
     if (((printProformaCount > 0) || (printInvoiceCount > 0)) && (noProforma == 'N')) {
