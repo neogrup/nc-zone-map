@@ -138,6 +138,18 @@ let ncZoneBehavior = (base) =>
       }
     }
   
+    _hideDiv(div, spotsViewMode){
+      return (div !== spotsViewMode)
+    }
+  
+    _getOrderID(elem, docorder) {
+      let v = elem.docId;
+      if (typeof elem.idOrder != 'undefined') {
+        v = elem.idOrder;
+      }
+      return v;
+    }
+
     _elementSelected(selectMode){
       if(this.mode == 'edit') return;
   

@@ -223,6 +223,7 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
                 <div class="item-content-body-center-small-data" hidden\$="{{_hideDiv('DELIVEREDPRODUCTS', spotsViewMode)}}">{{elementData.deliveredProducts}}</div>
                 <div class="item-content-body-center-small-data" hidden\$="{{_hideDiv('AMOUNT', spotsViewMode)}}">{{elementData.totalAmount}}</div>
                 <div class="item-content-body-center-small-data" hidden\$="{{_hideDiv('DOCID', spotsViewMode)}}">{{elementData.docId}}</div>
+                <div class="item-content-body-center-small-data" hidden\$="{{_hideDiv('ORDERID', spotsViewMode)}}">[[_getOrderID(elementData)]]</div>
                 <div class$="{{itemContentRemainingTimeClassName}}" style="font-size: 1.2em;" hidden\$="{{_hideDiv('REMAININGTIME', spotsViewMode)}}">{{elementData.docRemainingTime}}</div>
               </div>
             </template>
@@ -291,10 +292,6 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
   connectedCallback(){
     super.connectedCallback();
     this.elementData = {}
-  }
-
-  _hideDiv(div, spotsViewMode){
-    return (div !== spotsViewMode)
   }
 
   _elementConfChanged(){

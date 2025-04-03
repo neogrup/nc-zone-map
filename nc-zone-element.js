@@ -134,6 +134,7 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
           <div class="data" hidden\$="{{_hideDiv('DELIVEREDPRODUCTS', spotsViewMode)}}">{{elementData.deliveredProducts}}</div>
           <div class="data" hidden\$="{{_hideDiv('AMOUNT', spotsViewMode)}}">{{elementData.totalAmount}}</div>
           <div class="data" hidden\$="{{_hideDiv('DOCID', spotsViewMode)}}">{{elementData.docId}}</div>
+          <div class="data" hidden\$="{{_hideDiv('ORDERID', spotsViewMode)}}">[[_getOrderID(elementData, elementData.idOrder)]]</div>
           <div class$="{{itemContentRemainingTimeClassName}}" hidden\$="{{_hideDiv('REMAININGTIME', spotsViewMode)}}">{{elementData.docRemainingTime}}</div>
         </div>
       </div>
@@ -198,10 +199,6 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     this._elementConfChanged();
   }
 
-  _hideDiv(div, spotsViewMode){
-    return (div !== spotsViewMode)
-  }
-
   _elementConfChanged(){
     let cursor = 'default';
     let textVisibility = 'hidden';
@@ -234,6 +231,7 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     let deliveredProducts = 0;
     let totalAmount = 0;
     let docId = '';
+    let idOrder = '';
     let remainingTime = '';
     let noProforma = 'N';
     let printProformaCount = 0;
@@ -257,6 +255,14 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
       }
       totalAmount = totalAmount + element.docs[iDocs].totalAmount;
       docId = (docId === '') ? element.docs[iDocs].id : '+' + (Number(iDocs) + 1).toString();
+      
+      idOrder = docId;
+      if (typeof element.docs[iDocs].idOrder != 'undefined') {
+        if (element.docs[iDocs].idOrder != '') {
+          idOrder = element.docs[iDocs].idOrder;
+        }
+      }
+
       docStatus = element.docs[iDocs].status;
       docDelivered = element.docs[iDocs].delivered;
     }
@@ -308,18 +314,23 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     this.set('elementData.deliveredProducts', deliveredProducts);
     this.set('elementData.totalAmount', totalAmount.toFixed(2));
     this.set('elementData.docId', docId);
+    this.set('elementData.idOrder', idOrder); // important to be after docId, beacuse an event is launch when changing this value and not element, must be changed...
     this.set('elementData.docRemainingTime', remainingTime);
     this.set('elementData.docsCount', Number(iDocs) + 1);
     this.set('elementData.docs', element.docs);
 
+    console.log(this.elementData);
+
+    let pathimage = this.elementConf.urlImage.substring(0,this.elementConf.urlImage.lastIndexOf('.svg'));
+
     if (((printProformaCount > 0) || (printInvoiceCount > 0)) && (noProforma == 'N')) {
       this.hideProformaInvoice = false;
       this.updateStyles({
-        '--url-image': 'url(' + this.elementConf.urlImage.substring(1,this.elementConf.urlImage.lastIndexOf('.svg')) + '_p.svg' +')'
+        '--url-image': 'url(' + pathimage + '_p.svg' +')'
       });
     } else {
       this.updateStyles({
-        '--url-image': 'url(' + this.elementConf.urlImage.substring(1,this.elementConf.urlImage.lastIndexOf('.svg')) + '_o.svg' +')'
+        '--url-image': 'url(' + pathimage + '_o.svg' +')'
       });
     }  
   }
@@ -339,7 +350,6 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
       '--url-image': 'url(' + this.elementConf.urlImage + ')'
     });
   }
-
 
   // handleTrack(e) {
   //   if(this.mode !== 'edit') return;
