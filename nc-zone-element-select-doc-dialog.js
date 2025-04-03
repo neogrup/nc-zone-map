@@ -25,9 +25,7 @@ class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior],
             <template is="dom-repeat" items="{{elementData.docs}}" as="doc">
               
               <div class="line">
-                <div class="line-container" on-tap="_docSelected">
-                  <div class="line-doc-id">#[[doc.id]]</div>
-                  
+                <div class="line-container" on-tap="_docSelected">                 
                   <div class="line-doc-id" hidden\$="{{_hideDiv('DOCID', spotsViewMode)}}">#{{doc.id}}</div>
                   <div class="line-doc-id" hidden\$="{{_hideDiv('ORDERID', spotsViewMode)}}">#[[_getOrderIDSel(doc, doc.idOrder)]]</div>
 
