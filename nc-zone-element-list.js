@@ -223,7 +223,7 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
                 <div class="item-content-body-center-small-data" hidden\$="{{_hideDiv('DELIVEREDPRODUCTS', spotsViewMode)}}">{{elementData.deliveredProducts}}</div>
                 <div class="item-content-body-center-small-data" hidden\$="{{_hideDiv('AMOUNT', spotsViewMode)}}">{{elementData.totalAmount}}</div>
                 <div class="item-content-body-center-small-data" hidden\$="{{_hideDiv('DOCID', spotsViewMode)}}">{{elementData.docId}}</div>
-                <div class="item-content-body-center-small-data" hidden\$="{{_hideDiv('ORDERID', spotsViewMode)}}">[[_getOrderID(elementData)]]</div>
+                <div class="item-content-body-center-small-data" hidden\$="{{_hideDiv('ORDERID', spotsViewMode)}}">[[_getOrderID(elementData, elementData.idOrder)]]</div>
                 <div class$="{{itemContentRemainingTimeClassName}}" style="font-size: 1.2em;" hidden\$="{{_hideDiv('REMAININGTIME', spotsViewMode)}}">{{elementData.docRemainingTime}}</div>
               </div>
             </template>
@@ -231,7 +231,8 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
             <template is="dom-if" if="[[elementBig]]">
               <div class="item-content-body-center-horizontal">
                 <div class$="{{itemContentSpotIdClassName}}">{{elementConf.id}}</div>
-                <div class="item-content-body-center-data">{{elementData.docId}}</div>
+                <div class="item-content-body-center-data" hidden\$="{{_hideDiv('DOCID', spotsViewMode)}}">{{elementData.docId}}</div>
+                <div class="item-content-body-center-data" hidden\$="{{_hideDiv('ORDERID', spotsViewMode)}}">{{_getOrderID(elementData, elementData.idOrder)}}</div>
                 <div class$="{{itemContentRemainingTimeClassName}}">{{elementData.docRemainingTime}}</div>
                 <div class="item-content-doc-start-end">
                   <div class="item-content-doc-start">{{_formatTime(elementData.docStart)}}</div>
@@ -320,6 +321,7 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
     let deliveredProducts = 0;
     let totalAmount = 0;
     let docId = '';
+    let idOrder = '';
     let docStart = '';
     let docEnd = '';
     let remainingTime = '';
@@ -338,6 +340,13 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
       }
       totalAmount = totalAmount + element.docs[iDocs].totalAmount;
       docId = (docId === '') ? element.docs[iDocs].id : '+' + (Number(iDocs) + 1).toString();
+
+      idOrder = docId;
+      if (typeof element.docs[iDocs].idOrder != 'undefined') {
+        if (element.docs[iDocs].idOrder != '') {
+          idOrder = element.docs[iDocs].idOrder;
+        }
+      }
     }
 
     if (element.stats){
@@ -379,6 +388,7 @@ class NcZoneElementList extends GestureEventListeners(MixinZone(PolymerElement))
     this.set('elementData.deliveredProducts', deliveredProducts);
     this.set('elementData.totalAmount', totalAmount.toFixed(2));
     this.set('elementData.docId', docId);
+    this.set('elementData.idOrder', idOrder); // important to be after docId, beacuse an event is launch when changing this value and not element, must be changed...
     this.set('elementData.docStart', docStart);
     this.set('elementData.docEnd', docEnd);
     this.set('elementData.docRemainingTime', remainingTime);
