@@ -337,6 +337,7 @@ class NcZoneElement extends GestureEventListeners(MixinZone(PolymerElement)) {
     this.set('elementData.deliveredProducts', '');
     this.set('elementData.totalAmount', '');
     this.set('elementData.docId', '');
+    this.set('elementData.idOrder', '');
     this.set('elementData.docRemainingTime', '');
     this.set('elementData.docsCount', 0);
     this.set('elementData.docs', []);
