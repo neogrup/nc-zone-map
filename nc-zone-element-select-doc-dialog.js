@@ -43,7 +43,7 @@ class NcZoneElementSelectDocDialog extends mixinBehaviors([AppLocalizeBehavior],
 
         <div class="buttons">
           <paper-button raised on-tap="_newDoc"><iron-icon icon="add"></iron-icon>{{localize('BUTTON_NEW')}}</paper-button>
-          <paper-button raised dialog-dismiss>{{localize('BUTTON_CLOSE')}}</paper-button>
+          <paper-button raised class="delete" dialog-dismiss>{{localize('BUTTON_CLOSE')}}</paper-button>
         </div>
       </paper-dialog>
     `;

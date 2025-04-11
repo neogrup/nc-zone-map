@@ -28,5 +28,15 @@
     "INPUT_ERROR_REQUIRED": "Camp obligatori",
     "MESSAGE_ERROR_ZONE_SPOT_SELECTOR_SPOT_NOT_FOUND": "Lloc no trobat",
     "ZONE_SPOT_SELECTOR_TITLE": "Introduïu lloc"
+  },
+  "eu-es":{
+    "BUTTON_ACCEPT": "Onartu",
+    "BUTTON_CLOSE": "Itxi",
+    "BUTTON_NEW": "Berria",
+    "ELEMENT_SELECT_DOC_DIALOG_TITLE": "Hautatu dokumentua",
+    "ELEMENT_SELECT_DOC_DIALOG_SUBTITLE": "Hautatutako lekua: ",
+    "INPUT_ERROR_REQUIRED": "Eremu beharrezkoa",
+    "MESSAGE_ERROR_ZONE_SPOT_SELECTOR_SPOT_NOT_FOUND": "Lekua ez da aurkitu",
+    "ZONE_SPOT_SELECTOR_TITLE": "Sartu lekua"
   }
 }
