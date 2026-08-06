@@ -187,9 +187,15 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
     
   }
 
-  _getSlotId(prefix, elementId){
-    let spotId = prefix + this.data.id + elementId.replace(/ /g, "_");
-    return spotId
+  _sanitizeId(id) {
+    if (id === undefined || id === null) return '';
+    return String(id).replace(/[^a-zA-Z0-9_-]/g, "_");
+  }
+
+  _getSlotId(prefix, elementId, zoneId){
+    let zId = (zoneId !== undefined && zoneId !== null) ? zoneId : (this.data ? this.data.id : '');
+    let spotId = prefix + this._sanitizeId(zId) + this._sanitizeId(elementId);
+    return spotId;
   }
 
   _openSelectDoc(e){
@@ -237,16 +243,18 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
     let iElements;
     let slot;
     this.set('elements', []);
-    if (Object.keys(this.data).length === 0) return;
-    if (this.data.elements.length > 0) {
+    if (!this.data || Object.keys(this.data).length === 0) return;
+    if (this.data.elements && this.data.elements.length > 0) {
       this.set('elements', this.data.elements);
       for (iElements in this.data.elements){        
+        let elem = this.data.elements[iElements];
+        if (!elem) continue;
         if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
-          slot = '#slot' + this.data.id + this.data.elements[iElements].id.replace(/ /g, "_"); 
+          slot = '#' + this._getSlotId('slot', elem.id, this.data.id); 
         }
 
         if (this.mapViewMode == 'MAPLIST') {
-          slot = '#slotList' + this.data.id + this.data.elements[iElements].id.replace(/ /g, "_"); 
+          slot = '#' + this._getSlotId('slotList', elem.id, this.data.id); 
         }
 
         this.clearElement(slot);
@@ -282,55 +290,79 @@ class NcZoneMap extends GestureEventListeners(PolymerElement) {
     if (!this.ticketsList) return;
     if (Object.keys(this.ticketsList).length === 0) return;
 
-    if (this.ticketsList.data.zones.length > 0) {
-      for (iElements in this.data.elements){            
-        if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
-          slot = '#slot' + this.data.id + this.data.elements[iElements].id.replace(/ /g, "_"); 
-        }
+    if (this.ticketsList.data && this.ticketsList.data.zones && this.ticketsList.data.zones.length > 0) {
+      if (this.data && this.data.elements) {
+        for (iElements in this.data.elements){            
+          let elem = this.data.elements[iElements];
+          if (!elem) continue;
+          if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
+            slot = '#' + this._getSlotId('slot', elem.id, this.data.id); 
+          }
 
-        if (this.mapViewMode == 'MAPLIST') {
-          slot = '#slotList' + this.data.id + this.data.elements[iElements].id.replace(/ /g, "_"); 
+          if (this.mapViewMode == 'MAPLIST') {
+            slot = '#' + this._getSlotId('slotList', elem.id, this.data.id); 
+          }
+          this.clearElement(slot);
         }
-        this.clearElement(slot);
       }
 
       for (iZones in this.ticketsList.data.zones){            
-        if (this.data.id === this.ticketsList.data.zones[iZones].id){
-          for (iElements in this.ticketsList.data.zones[iZones].elements){
-            if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
-              slot = '#slot' + this.ticketsList.data.zones[iZones].id + this.ticketsList.data.zones[iZones].elements[iElements].id.replace(/ /g, "_"); 
-            } 
-            if (this.mapViewMode == 'MAPLIST') {
-              slot = '#slotList' + this.ticketsList.data.zones[iZones].id + this.ticketsList.data.zones[iZones].elements[iElements].id.replace(/ /g, "_"); 
+        let zone = this.ticketsList.data.zones[iZones];
+        if (!zone) continue;
+        if (this.data && (this.data.id === zone.id || String(this.data.id) === String(zone.id))){
+          if (zone.elements) {
+            for (iElements in zone.elements){
+              let elem = zone.elements[iElements];
+              if (!elem) continue;
+              if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
+                slot = '#' + this._getSlotId('slot', elem.id, zone.id); 
+              } 
+              if (this.mapViewMode == 'MAPLIST') {
+                slot = '#' + this._getSlotId('slotList', elem.id, zone.id); 
+              }
+              this.updateSpot(slot, elem);
             }
-            this.updateSpot(slot, this.ticketsList.data.zones[iZones].elements[iElements])
           }
         }
       }
     } else {
-      for (iElements in this.data.elements){            
-        if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
-          slot = '#slot' + this.data.id + this.data.elements[iElements].id.replace(/ /g, "_"); 
-        }
+      if (this.data && this.data.elements) {
+        for (iElements in this.data.elements){            
+          let elem = this.data.elements[iElements];
+          if (!elem) continue;
+          if ((this.mapViewMode == 'MAPFIT') || (this.mapViewMode == 'MAPSCROLL')) {    
+            slot = '#' + this._getSlotId('slot', elem.id, this.data.id); 
+          }
 
-        if (this.mapViewMode == 'MAPLIST') {
-          slot = '#slotList' + this.data.id + this.data.elements[iElements].id.replace(/ /g, "_"); 
-        }
+          if (this.mapViewMode == 'MAPLIST') {
+            slot = '#' + this._getSlotId('slotList', elem.id, this.data.id); 
+          }
 
-        this.clearElement(slot);
+          this.clearElement(slot);
+        }
       }
     }
   }
 
   updateSpot(slot, element){
-    if (this.shadowRoot.querySelector(slot)){
-      this.shadowRoot.querySelector(slot).updateElement(element);
+    if (!slot) return;
+    try {
+      if (this.shadowRoot && this.shadowRoot.querySelector(slot)){
+        this.shadowRoot.querySelector(slot).updateElement(element);
+      }
+    } catch (e) {
+      console.warn('nc-zone-map: error updating spot for selector:', slot, e);
     }
   }
 
   clearElement(slot){
-    if (this.shadowRoot.querySelector(slot)){
-      this.shadowRoot.querySelector(slot).clearElement();
+    if (!slot) return;
+    try {
+      if (this.shadowRoot && this.shadowRoot.querySelector(slot)){
+        this.shadowRoot.querySelector(slot).clearElement();
+      }
+    } catch (e) {
+      console.warn('nc-zone-map: error clearing element for selector:', slot, e);
     }
   }
 
